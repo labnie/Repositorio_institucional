@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repositorio Institucional — ENS-BCS</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --vino: #6b1a2a;
+  --vino-oscuro: #4a0f1c;
+  --vino-claro: #8c2a3e;
+  --dorado: #c9a84c;
+  --dorado-claro: #f0d98a;
+  --crema: #f7f2ee;
+  --blanco: #ffffff;
+  --texto: #1c1c1c;
+  --texto-suave: #5a5a5a;
+  --texto-tenue: #9a9a9a;
+  --borde: #e0d8d0;
+  --sidebar: #faf7f4;
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(--texto); min-height: 100vh; }
+
+/* ── NAVBAR ── */
+.navbar {
+  background: var(--vino-oscuro);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-right: 2rem;
+}
+
+.navbar-logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}
+
+.navbar-title {
+  color: white;
+  line-height: 1.2;
+}
+
+.navbar-title strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dorado);
+}
+
+.navbar-title small {
+  font-size: 10px;
+  opacity: 0.7;
+  font-weight: 300;
+}
+
+.navbar-divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 1.5rem;
+}
+
+.navbar-menu {
+  display: flex;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.navbar-menu a {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.navbar-menu a:hover,
+.navbar-menu a.active {
+  background: rgba(255,255,255,0.12);
+  color: white;
+}
+
+.navbar-menu a.observatorio {
+  color: var(--dorado);
+}
+
+.navbar-menu a.observatorio:hover {
+  background: rgba(201,168,76,0.15);
+  color: var(--dorado-claro);
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--vino);
+  background-image: linear-gradient(135deg, var(--vino-oscuro) 0%, var(--vino) 60%, var(--vino-claro) 100%);
+  color: white;
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.08);
+}
+
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.hero-sub {
+  font-size: 13px;
+  opacity: 0.7;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+
+/* ── BARRA DE BÚSQUEDA HERO ── */
+.hero-search {
+  display: flex;
+  gap: 10px;
+  max-width: 700px;
+  position: relative;
+}
+
+.hero-search input {
+  flex: 1;
+  padding: 12px 44px 12px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--texto);
+  background: white;
+  outline: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.btn-limpiar {
+  position: absolute;
+  right: 110px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  display: none;
+}
+
+.btn-limpiar:hover { color: var(--vino); }
+
+.btn-buscar {
+  padding: 12px 24px;
+  background: var(--dorado);
+  color: var(--vino-oscuro);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.btn-buscar:hover { background: var(--dorado-claro); }
+
+/* FILTROS RÁPIDOS */
+.quick-filters {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.quick-label {
+  font-size: 12px;
+  opacity: 0.6;
+  font-weight: 300;
+}
+
+.quick-btn {
+  padding: 4px 14px;
+  border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quick-btn:hover,
+.quick-btn.active {
+  background: var(--dorado);
+  color: var(--vino-oscuro);
+  border-color: var(--dorado);
+  font-weight: 600;
+}
+
+/* ── ESTADÍSTICAS ── */
+.stats-bar {
+  background: white;
+  border-bottom: 1px solid var(--borde);
+  padding: 1rem 2rem;
+}
+
+.stats-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-num {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--vino);
+  font-family: 'Playfair Display', serif;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--texto-suave);
+  line-height: 1.3;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--borde);
+}
+
+/* ── LAYOUT PRINCIPAL ── */
+.main-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  display: grid;
+  grid-template-columns: 180px 1fr 200px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: white;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  overflow: hidden;
+  position: sticky;
+  top: 80px;
+}
+
+.sidebar-section {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--borde);
+}
+
+.sidebar-section:last-child { border-bottom: none; }
+
+.sidebar-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dorado);
+  margin-bottom: 10px;
+}
+
+.sidebar-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--texto-suave);
+  transition: background 0.15s, color 0.15s;
+  margin-bottom: 2px;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+  background: #f5ede8;
+  color: var(--vino);
+  font-weight: 500;
+}
+
+.sidebar-count {
+  font-size: 11px;
+  background: var(--vino);
+  color: white;
+  padding: 1px 7px;
+  border-radius: 99px;
+  font-weight: 500;
+}
+
+.sidebar-item.active .sidebar-count {
+  background: var(--dorado);
+  color: var(--vino-oscuro);
+}
+
+/* FILTROS AVANZADOS EN SIDEBAR */
+.sidebar-select {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--texto);
+  background: var(--crema);
+  cursor: pointer;
+  outline: none;
+  margin-bottom: 8px;
+}
+
+.sidebar-select:focus { border-color: var(--vino); }
+
+.badge-filtros {
+  display: none;
+  background: var(--vino);
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-top: 6px;
+}
+
+/* ── ÁREA DE RESULTADOS ── */
+.results-area { min-height: 400px; }
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: var(--texto-suave);
+}
+
+.results-count span {
+  background: var(--vino);
+  color: white;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 10px;
+  border-radius: 99px;
+}
+
+/* ── TARJETA DE DOCUMENTO ── */
+.card {
+  background: white;
+  border: 1px solid var(--borde);
+  border-left: 3px solid transparent;
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 10px;
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s;
+  animation: fadeIn 0.3s ease both;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border-left-color: var(--dorado);
+  transform: translateY(-1px);
+}
+
+.card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.icon-tesis { background: #e8f0fe; color: #1a3a8f; }
+.icon-informe { background: #e6f4ea; color: #1a5c32; }
+.icon-portafolio { background: #fff3e0; color: #7a4d00; }
+.icon-otro { background: #f3e8ff; color: #5b21b6; }
+
+.card-body { flex: 1; min-width: 0; }
+
+.card-titulo {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--texto);
+  line-height: 1.4;
+  margin-bottom: 5px;
+  font-family: 'Playfair Display', serif;
+}
+
+.card-meta {
+  font-size: 12px;
+  color: var(--texto-suave);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 12px;
+  margin-bottom: 8px;
+}
+
+.card-meta-item { display: flex; align-items: center; gap: 4px; }
+
+.dot {
+  width: 3px; height: 3px;
+  background: var(--dorado);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 99px;
+  font-weight: 500;
+}
+
+.tag-tipo { background: #f5ede8; color: var(--vino); }
+.tag-programa { background: #e8f4f0; color: #1a5c3a; }
+.tag-anio { background: #f0f0f0; color: #555; }
+
+.card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.btn-ver {
+  display: block;
+  padding: 7px 16px;
+  background: var(--vino);
+  color: white;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.btn-ver:hover { background: var(--vino-claro); }
+
+/* ── ESTADO VACÍO ── */
+.estado {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--texto-suave);
+}
+
+.estado-icono { font-size: 40px; margin-bottom: 14px; }
+.estado p { font-size: 14px; line-height: 1.7; }
+
+/* ── PAGINACIÓN ── */
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.pag-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--borde);
+  background: white;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--texto-suave);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pag-btn:hover { border-color: var(--vino); color: var(--vino); }
+
+.pag-btn.active {
+  background: var(--vino);
+  border-color: var(--vino);
+  color: white;
+  font-weight: 600;
+}
+
+.pag-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pag-btn.nav { font-size: 16px; }
+.footer {
+  background: var(--vino-oscuro);
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  padding: 1.25rem;
+  font-size: 12px;
+  margin-top: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.footer img {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.7;
+}
+
+@media (max-width: 900px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .navbar-menu { display: none; }
+  .stats-inner { gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- MODAL ACERCA DE -->
+<div id="modalAcerca" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:16px; max-width:580px; width:90%; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.25rem; border-bottom:1px solid var(--borde); padding-bottom:1rem;">
+      <img src="https://labnie.github.io/Repositorio_institucional/logotipo-ens.png" alt="ENS" style="height:44px; width:auto;">
+      <div>
+        <div style="font-family:'Playfair Display',serif; font-size:16px; font-weight:500; color:var(--vino);">Acerca del Repositorio</div>
+        <div style="font-size:12px; color:var(--texto-suave);">ENS "Profr. Enrique Estrada Lucero" · BCS</div>
+      </div>
+    </div>
+    <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify;">
+      El Repositorio Institucional de la Escuela Normal Superior del Estado de Baja California Sur "Profr. Enrique Estrada Lucero", está coordinado desde el Laboratorio Normalista de Investigación Educativa pero es un esfuerzo de la estructura académica de nuestra institución para poner en común con acceso público, toda la producción académica de estudiantes normalistas, de los últimos años. En este sentido, este repositorio no pudo haber sido posible sin el esfuerzo de la dirección, la subdirección académica, la coordinación de licenciatura, los departamentos académicos —que tienen a su cargo diversos programas de estudio— y, por supuesto, el esfuerzo de maestros y maestras asesoras que año tras año, acompañan los procesos de titulación.
+    </p>
+    <div style="margin-top:1.25rem; display:flex; justify-content:center;">
+      <div style="width:48px; height:2px; background:var(--dorado); border-radius:2px;"></div>
+    </div>
+    <div style="margin-top:1rem; display:flex; align-items:center; gap:8px; justify-content:center;">
+      <img src="https://labnie.github.io/repositorio-normal/original-logo-2-lab.png" alt="LABNIE" style="height:24px; width:auto; opacity:0.7;">
+      <span style="font-size:11px; color:var(--texto-suave);">Laboratorio Normalista de Investigación Educativa</span>
+    </div>
+    <button onclick="cerrarModal()" style="position:absolute; top:14px; right:14px; background:none; border:none; font-size:18px; cursor:pointer; color:var(--texto-suave); line-height:1;">✕</button>
+  </div>
+</div>
+<nav class="navbar">
+  <a class="navbar-brand" href="#">
+    <img src="https://labnie.github.io/Repositorio_institucional/logotipo-ens.png" alt="ENS-BCS" class="navbar-logo">
+    <div class="navbar-title">
+      <strong>Repositorio Institucional</strong>
+      <small>ENS "Profr. Enrique Estrada Lucero" · BCS</small>
+    </div>
+  </a>
+  <div class="navbar-divider"></div>
+  <div class="navbar-menu">
+    <a href="#" class="active">Inicio</a>
+    <a href="mapa_observatorio.html" class="observatorio">🗺 Observatorio</a>
+    <a href="#" onclick="abrirModal(); return false;">Acerca de</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Repositorio de Documentos Recepcionales Normalistas</h1>
+    <p class="hero-sub">Laboratorio Normalista de Investigación Educativa · LABNIE</p>
+    <div class="hero-search">
+      <input type="text" id="searchInput" placeholder="Buscar por título, autor o escuela de práctica..." />
+      <button class="btn-limpiar" id="btnLimpiar" onclick="limpiarBusqueda()" title="Limpiar">✕</button>
+      <button class="btn-buscar" onclick="buscar()">Buscar</button>
+    </div>
+    <div class="quick-filters">
+      <span class="quick-label">Filtrar:</span>
+      <button class="quick-btn active" onclick="filtroRapido('', this)">Todo</button>
+      <button class="quick-btn" onclick="filtroRapido('Tesis', this)">Tesis</button>
+      <button class="quick-btn" onclick="filtroRapido('Informe de práctica', this)">Informes</button>
+      <button class="quick-btn" onclick="filtroRapido('Portafolio de evidencias', this)">Portafolios</button>
+      <span class="badge-filtros" id="badgeFiltros"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ESTADÍSTICAS -->
+<div class="stats-bar">
+  <div class="stats-inner" id="statsInner">
+    <div class="stat-item">
+      <div class="stat-num" id="statTotal">—</div>
+      <div class="stat-label">Documentos<br>totales</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-num" id="statSedes">—</div>
+      <div class="stat-label">Sedes<br>institucionales</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-num" id="statAnios">—</div>
+      <div class="stat-label">Años<br>cubiertos</div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT PRINCIPAL -->
+<div class="main-layout">
+
+  <!-- SIDEBAR IZQUIERDO: Colecciones y Periodo -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Colecciones</div>
+      <div class="sidebar-item active" onclick="filtrarSidebar('tipo', '', this)">
+        Todos los documentos <span class="sidebar-count" id="countTodos">0</span>
+      </div>
+      <div id="colecciones-lista"></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Periodo</div>
+      <div id="periodo-lista"></div>
+    </div>
+  </aside>
+
+  <!-- RESULTADOS -->
+  <div class="results-area">
+    <div class="results-header">
+      <div class="results-count" id="resultsHeader"></div>
+    </div>
+    <div id="resultsList">
+      <div class="estado">
+        <div class="estado-icono">🔎</div>
+        <p>Escribe una palabra clave o selecciona un filtro<br>para encontrar documentos.</p>
+      </div>
+    </div>
+    <div class="paginacion" id="paginacion"></div>
+  </div>
+
+  <!-- SIDEBAR DERECHO: Filtros avanzados -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Filtros avanzados</div>
+      <select class="sidebar-select" id="filtroSede" onchange="actualizarCascada()">
+        <option value="">Todas las sedes</option>
+      </select>
+      <select class="sidebar-select" id="filtroPrograma" onchange="actualizarCascada()">
+        <option value="">Todos los programas</option>
+      </select>
+      <select class="sidebar-select" id="filtroTipo" onchange="actualizarCascada()">
+        <option value="">Todos los tipos</option>
+      </select>
+      <select class="sidebar-select" id="filtroEscuela" onchange="actualizarCascada()">
+        <option value="">Todas las escuelas</option>
+      </select>
+      <select class="sidebar-select" id="filtroAnio" onchange="buscar()">
+        <option value="">Todos los años</option>
+      </select>
+      <span class="badge-filtros" id="badgeFiltros"></span>
+    </div>
+  </aside>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <img src="https://labnie.github.io/repositorio-normal/original-logo-2-lab.png" alt="LABNIE">
+  Responsable de repositorio: Uri Argumedo Hernández &nbsp;·&nbsp;
+  Responsable de mapa interactivo: Tito Fernando Piñeda Verdugo &nbsp;·&nbsp;
+  Diseño: Laboratorio Normalista de Investigación Educativa
+</div>
+
+<script>
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQN3VnXH148TripGiwhOyJdRbMmIKBkIOrupfPuvtFI9peLtS8kj4Z-L7tOXVJ9aA/pub?output=csv";
+
+let allDocs = [];
+let filtroRapidoActivo = "";
+
+function parseCSV(text) {
+  const lines = text.split("\n");
+  const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, "").trim());
+  return lines.slice(1).filter(l => l.trim()).map(line => {
+    const values = [];
+    let cur = "", inQ = false;
+    for (let c of line) {
+      if (c === '"') { inQ = !inQ; }
+      else if (c === ',' && !inQ) { values.push(cur.trim()); cur = ""; }
+      else cur += c;
+    }
+    values.push(cur.trim());
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = (values[i] || "").replace(/^"|"$/g, "").trim(); });
+    return obj;
+  });
+}
+
+function normalizar(texto) {
+  return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function dosSilabas(palabra) {
+  const p = normalizar(palabra);
+  const vocales = "aeiou";
+  let silabas = 0, i = 0;
+  while (i < p.length && silabas < 2) { if (vocales.includes(p[i])) silabas++; i++; }
+  return p.slice(0, Math.max(i, 3));
+}
+
+function coincide(texto, query) {
+  const palabrasQuery = normalizar(query).split(/\s+/).filter(Boolean);
+  const textoNorm = normalizar(texto);
+  return palabrasQuery.every(pq => {
+    const raizQ = dosSilabas(pq);
+    return textoNorm.includes(pq) || textoNorm.split(/\s+/).some(pt => normalizar(pt).startsWith(raizQ));
+  });
+}
+
+function iconoTipo(tipo) {
+  const t = (tipo || "").toLowerCase();
+  if (t.includes("tesis")) return { sigla: "TES", clase: "icon-tesis" };
+  if (t.includes("informe")) return { sigla: "INF", clase: "icon-informe" };
+  if (t.includes("portafolio")) return { sigla: "POR", clase: "icon-portafolio" };
+  return { sigla: "DOC", clase: "icon-otro" };
+}
+
+function llenarSelect(id, valores) {
+  const sel = document.getElementById(id);
+  const actual = sel.value;
+  sel.innerHTML = `<option value="">${sel.options[0].text}</option>`;
+  valores.forEach(v => { const o = document.createElement("option"); o.value = v; o.textContent = v; sel.appendChild(o); });
+  if (valores.includes(actual)) sel.value = actual;
+}
+
+function actualizarCascada() {
+  const sede = document.getElementById("filtroSede").value;
+  const prog = document.getElementById("filtroPrograma").value;
+  const tipo = document.getElementById("filtroTipo").value;
+  const escuela = document.getElementById("filtroEscuela").value;
+  const filtrados = allDocs.filter(d => (!sede || d["Sede"] === sede) && (!prog || d["Programa de estudio"] === prog) && (!tipo || d["Tipo de documento"] === tipo) && (!escuela || d["Escuela de práctica"] === escuela));
+  llenarSelect("filtroPrograma", [...new Set((sede ? allDocs.filter(d => d["Sede"] === sede) : allDocs).map(d => d["Programa de estudio"]).filter(Boolean))].sort());
+  llenarSelect("filtroTipo", [...new Set(allDocs.filter(d => (!sede || d["Sede"] === sede) && (!prog || d["Programa de estudio"] === prog)).map(d => d["Tipo de documento"]).filter(Boolean))].sort());
+  llenarSelect("filtroEscuela", [...new Set(allDocs.filter(d => (!sede || d["Sede"] === sede) && (!prog || d["Programa de estudio"] === prog) && (!tipo || d["Tipo de documento"] === tipo)).map(d => d["Escuela de práctica"]).filter(Boolean))].sort());
+  llenarSelect("filtroAnio", [...new Set(filtrados.map(d => d["Año"]).filter(Boolean))].sort().reverse());
+  buscar();
+}
+
+function poblarFiltrosInicial(docs) {
+  llenarSelect("filtroSede", [...new Set(docs.map(d => d["Sede"]).filter(Boolean))].sort());
+  llenarSelect("filtroPrograma", [...new Set(docs.map(d => d["Programa de estudio"]).filter(Boolean))].sort());
+  llenarSelect("filtroTipo", [...new Set(docs.map(d => d["Tipo de documento"]).filter(Boolean))].sort());
+  llenarSelect("filtroEscuela", [...new Set(docs.map(d => d["Escuela de práctica"]).filter(Boolean))].sort());
+  llenarSelect("filtroAnio", [...new Set(docs.map(d => d["Año"]).filter(Boolean))].sort().reverse());
+}
+
+function poblarSidebar(docs) {
+  // Colecciones por tipo
+  const tipos = {};
+  docs.forEach(d => { const t = d["Tipo de documento"] || "Otro"; tipos[t] = (tipos[t] || 0) + 1; });
+  document.getElementById("countTodos").textContent = docs.length;
+  const lista = document.getElementById("colecciones-lista");
+  lista.innerHTML = Object.entries(tipos).sort((a,b) => b[1]-a[1]).map(([t, n]) => `
+    <div class="sidebar-item" onclick="filtrarSidebar('tipo', '${t}', this)">
+      ${t} <span class="sidebar-count">${n}</span>
+    </div>`).join("");
+
+  // Periodo por año
+  const anios = {};
+  docs.forEach(d => { const a = d["Año"]; if (a) anios[a] = (anios[a] || 0) + 1; });
+  const periodoLista = document.getElementById("periodo-lista");
+  periodoLista.innerHTML = Object.entries(anios).sort((a,b) => b[0]-a[0]).map(([a, n]) => `
+    <div class="sidebar-item" onclick="filtrarSidebar('anio', '${a}', this)">
+      ${a} <span class="sidebar-count">${n}</span>
+    </div>`).join("");
+}
+
+function poblarEstadisticas(docs) {
+  document.getElementById("statTotal").textContent = docs.length;
+  document.getElementById("statSedes").textContent = new Set(docs.map(d => d["Sede"]).filter(Boolean)).size;
+  const anios = [...new Set(docs.map(d => d["Año"]).filter(Boolean))];
+  document.getElementById("statAnios").textContent = anios.length > 0 ? `${Math.min(...anios)}–${Math.max(...anios)}` : "—";
+}
+
+function filtrarSidebar(campo, valor, el) {
+  document.querySelectorAll(".sidebar-item").forEach(i => i.classList.remove("active"));
+  el.classList.add("active");
+  if (campo === "tipo") {
+    document.getElementById("filtroTipo").value = valor;
+    filtroRapidoActivo = valor;
+    document.querySelectorAll(".quick-btn").forEach(b => b.classList.remove("active"));
+  } else if (campo === "anio") {
+    document.getElementById("filtroAnio").value = valor;
+  }
+  buscar();
+}
+
+function filtroRapido(tipo, btn) {
+  filtroRapidoActivo = tipo;
+  document.querySelectorAll(".quick-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("filtroTipo").value = tipo;
+  buscar();
+}
+
+function actualizarUI(q, tipo, prog, anio, escuela, sede) {
+  document.getElementById("btnLimpiar").style.display = q ? "block" : "none";
+  const n = [tipo, prog, anio, escuela, sede].filter(Boolean).length;
+  const badge = document.getElementById("badgeFiltros");
+  if (n > 0) { badge.style.display = "inline-block"; badge.textContent = `${n} filtro${n>1?"s":""} activo${n>1?"s":""}`; }
+  else badge.style.display = "none";
+}
+
+function limpiarBusqueda() {
+  document.getElementById("searchInput").value = "";
+  ["filtroSede","filtroPrograma","filtroTipo","filtroEscuela","filtroAnio"].forEach(id => document.getElementById(id).value = "");
+  filtroRapidoActivo = "";
+  document.querySelectorAll(".quick-btn").forEach(b => b.classList.remove("active"));
+  document.querySelector(".quick-btn").classList.add("active");
+  document.querySelectorAll(".sidebar-item").forEach(i => i.classList.remove("active"));
+  document.querySelector(".sidebar-item").classList.add("active");
+  poblarFiltrosInicial(allDocs);
+  buscar();
+}
+
+const DOCS_POR_PAGINA = 10;
+let paginaActual = 1;
+let resultadosActuales = [];
+
+function renderTarjetas(docs) {
+  return docs.map((d, i) => {
+    const icono = iconoTipo(d["Tipo de documento"]);
+    return `
+    <div class="card" style="animation-delay:${Math.min(i*0.04,0.3)}s">
+      <div class="card-icon ${icono.clase}">${icono.sigla}</div>
+      <div class="card-body">
+        <div class="card-titulo">${d["Título"] || "Sin título"}</div>
+        <div class="card-meta">
+          ${d["Autor"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Autor"]}</span>` : ""}
+          ${d["Año"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Año"]}</span>` : ""}
+          ${d["Sede"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Sede"]}</span>` : ""}
+          ${d["Escuela de práctica"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Escuela de práctica"]}</span>` : ""}
+        </div>
+        <div class="card-tags">
+          ${d["Tipo de documento"] ? `<span class="tag tag-tipo">${d["Tipo de documento"]}</span>` : ""}
+          ${d["Programa de estudio"] ? `<span class="tag tag-programa">${d["Programa de estudio"]}</span>` : ""}
+          ${d["Plan de estudio"] ? `<span class="tag tag-anio">Plan ${d["Plan de estudio"]}</span>` : ""}
+        </div>
+      </div>
+      ${d["Liga"] ? `<div class="card-actions"><a class="btn-ver" href="${d["Liga"]}" target="_blank">Ver documento</a></div>` : ""}
+    </div>`;
+  }).join("");
+}
+
+function mostrarPagina(pagina) {
+  paginaActual = pagina;
+  const totalPaginas = Math.ceil(resultadosActuales.length / DOCS_POR_PAGINA);
+  const inicio = (pagina - 1) * DOCS_POR_PAGINA;
+  const fin = inicio + DOCS_POR_PAGINA;
+
+  document.getElementById("resultsList").innerHTML = renderTarjetas(resultadosActuales.slice(inicio, fin));
+
+  const pag = document.getElementById("paginacion");
+  if (totalPaginas <= 1) { pag.innerHTML = ""; return; }
+
+  let btns = `<button class="pag-btn nav" onclick="mostrarPagina(${pagina-1})" ${pagina===1?"disabled":""}>‹</button>`;
+  for (let p = 1; p <= totalPaginas; p++) {
+    if (totalPaginas > 7 && p > 2 && p < totalPaginas - 1 && Math.abs(p - pagina) > 1) {
+      if (p === 3 || p === totalPaginas - 2) btns += `<span style="padding:0 4px;color:#aaa">…</span>`;
+      continue;
+    }
+    btns += `<button class="pag-btn ${p===pagina?"active":""}" onclick="mostrarPagina(${p})">${p}</button>`;
+  }
+  btns += `<button class="pag-btn nav" onclick="mostrarPagina(${pagina+1})" ${pagina===totalPaginas?"disabled":""}>›</button>`;
+  pag.innerHTML = btns;
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function buscar() {
+  const q = document.getElementById("searchInput").value.trim();
+  const tipo = document.getElementById("filtroTipo").value;
+  const prog = document.getElementById("filtroPrograma").value;
+  const anio = document.getElementById("filtroAnio").value;
+  const escuela = document.getElementById("filtroEscuela").value;
+  const sede = document.getElementById("filtroSede").value;
+
+  actualizarUI(q, tipo, prog, anio, escuela, sede);
+
+  const header = document.getElementById("resultsHeader");
+  const list = document.getElementById("resultsList");
+  const pag = document.getElementById("paginacion");
+
+  if (!q && !tipo && !prog && !anio && !escuela && !sede) {
+    header.innerHTML = "";
+    pag.innerHTML = "";
+    list.innerHTML = `<div class="estado"><div class="estado-icono">🔎</div><p>Escribe una palabra clave o selecciona un filtro<br>para encontrar documentos.</p></div>`;
+    return;
+  }
+
+  resultadosActuales = allDocs.filter(d => {
+    const texto = [d["Título"], d["Autor"], d["Escuela de práctica"], d["Plan de estudio"], d["Sede"]].join(" ");
+    return (!q || coincide(texto, q)) &&
+           (!tipo || d["Tipo de documento"] === tipo) &&
+           (!prog || d["Programa de estudio"] === prog) &&
+           (!anio || d["Año"] === anio) &&
+           (!escuela || d["Escuela de práctica"] === escuela) &&
+           (!sede || d["Sede"] === sede);
+  });
+
+  if (resultadosActuales.length === 0) {
+    header.innerHTML = "";
+    pag.innerHTML = "";
+    list.innerHTML = `<div class="estado"><div class="estado-icono">🔍</div><p>No encontramos documentos con esos términos.<br>Intenta con sinónimos, menos filtros, o verifica la ortografía.</p></div>`;
+    return;
+  }
+
+  const total = resultadosActuales.length;
+  const totalPaginas = Math.ceil(total / DOCS_POR_PAGINA);
+  header.innerHTML = `<div class="results-count">Mostrando <span>${total} documento${total !== 1 ? "s" : ""}</span></div>`;
+  mostrarPagina(1);
+}
+
+function abrirModal() {
+  const m = document.getElementById("modalAcerca");
+  m.style.display = "flex";
+}
+
+function cerrarModal() {
+  document.getElementById("modalAcerca").style.display = "none";
+}
+
+document.addEventListener("click", e => {
+  const modal = document.getElementById("modalAcerca");
+  if (e.target === modal) cerrarModal();
+});
+
+fetch(CSV_URL)
+  .then(r => { if (!r.ok) throw new Error(); return r.text(); })
+  .then(text => {
+    allDocs = parseCSV(text).filter(d => d["Título"]);
+    if (allDocs.length === 0) {
+      document.getElementById("resultsList").innerHTML = `<div class="estado"><div class="estado-icono">⚠️</div><p>No se encontraron documentos en la hoja.</p></div>`;
+      return;
+    }
+    poblarFiltrosInicial(allDocs);
+    poblarSidebar(allDocs);
+    poblarEstadisticas(allDocs);
+  })
+  .catch(() => {
+    document.getElementById("resultsList").innerHTML = `<div class="estado"><div class="estado-icono">⚠️</div><p>No se pudo conectar con la hoja de Google Sheets.</p></div>`;
+  });
+
+document.getElementById("searchInput").addEventListener("keyup", e => { if (e.key === "Enter") buscar(); });
+</script>
+</body>
+</html>
