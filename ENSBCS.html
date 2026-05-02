@@ -551,7 +551,29 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- MODAL ACERCA DE -->
+<div id="modalAcerca" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:16px; max-width:580px; width:90%; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.25rem; border-bottom:1px solid var(--borde); padding-bottom:1rem;">
+      <img src="https://labnie.github.io/Repositorio_institucional/logotipo-ens.png" alt="ENS" style="height:44px; width:auto;">
+      <div>
+        <div style="font-family:'Playfair Display',serif; font-size:16px; font-weight:500; color:var(--vino);">Acerca del Repositorio</div>
+        <div style="font-size:12px; color:var(--texto-suave);">ENS "Profr. Enrique Estrada Lucero" · BCS</div>
+      </div>
+    </div>
+    <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify;">
+      El Repositorio Institucional de la Escuela Normal Superior del Estado de Baja California Sur "Profr. Enrique Estrada Lucero", está coordinado desde el Laboratorio Normalista de Investigación Educativa pero es un esfuerzo de la estructura académica de nuestra institución para poner en común con acceso público, toda la producción académica de estudiantes normalistas, de los últimos años. En este sentido, este repositorio no pudo haber sido posible sin el esfuerzo de la dirección, la subdirección académica, la coordinación de licenciatura, los departamentos académicos —que tienen a su cargo diversos programas de estudio— y, por supuesto, el esfuerzo de maestros y maestras asesoras que año tras año, acompañan los procesos de titulación.
+    </p>
+    <div style="margin-top:1.25rem; display:flex; justify-content:center;">
+      <div style="width:48px; height:2px; background:var(--dorado); border-radius:2px;"></div>
+    </div>
+    <div style="margin-top:1rem; display:flex; align-items:center; gap:8px; justify-content:center;">
+      <img src="https://labnie.github.io/repositorio-normal/original-logo-2-lab.png" alt="LABNIE" style="height:24px; width:auto; opacity:0.7;">
+      <span style="font-size:11px; color:var(--texto-suave);">Laboratorio Normalista de Investigación Educativa</span>
+    </div>
+    <button onclick="cerrarModal()" style="position:absolute; top:14px; right:14px; background:none; border:none; font-size:18px; cursor:pointer; color:var(--texto-suave); line-height:1;">✕</button>
+  </div>
+</div>
 <nav class="navbar">
   <a class="navbar-brand" href="#">
     <img src="https://labnie.github.io/Repositorio_institucional/logotipo-ens.png" alt="ENS-BCS" class="navbar-logo">
@@ -563,9 +585,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
   <div class="navbar-divider"></div>
   <div class="navbar-menu">
     <a href="#" class="active">Inicio</a>
-    <a href="#" onclick="filtrarPorTipo(''); return false;">Colecciones</a>
     <a href="mapa_observatorio.html" class="observatorio">🗺 Observatorio</a>
-    <a href="#" onclick="mostrarAcercaDe(); return false;">Acerca de</a>
+    <a href="#" onclick="abrirModal(); return false;">Acerca de</a>
   </div>
 </nav>
 
@@ -601,11 +622,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
     <div class="stat-item">
       <div class="stat-num" id="statSedes">—</div>
       <div class="stat-label">Sedes<br>institucionales</div>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <div class="stat-num" id="statProgramas">—</div>
-      <div class="stat-label">Programas<br>de estudio</div>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
@@ -784,7 +800,6 @@ function poblarSidebar(docs) {
 function poblarEstadisticas(docs) {
   document.getElementById("statTotal").textContent = docs.length;
   document.getElementById("statSedes").textContent = new Set(docs.map(d => d["Sede"]).filter(Boolean)).size;
-  document.getElementById("statProgramas").textContent = new Set(docs.map(d => d["Programa de estudio"]).filter(Boolean)).size;
   const anios = [...new Set(docs.map(d => d["Año"]).filter(Boolean))];
   document.getElementById("statAnios").textContent = anios.length > 0 ? `${Math.min(...anios)}–${Math.max(...anios)}` : "—";
 }
@@ -891,9 +906,19 @@ function buscar() {
   }).join("");
 }
 
-function mostrarAcercaDe() {
-  alert("Repositorio Institucional de Documentos Recepcionales Normalistas\n\nEscuela Normal Superior del Estado de Baja California Sur\n\"Profr. Enrique Estrada Lucero\"\n\nLaboratorio Normalista de Investigación Educativa (LABNIE)\n\nResponsable: Uri Argumedo Hernández");
+function abrirModal() {
+  const m = document.getElementById("modalAcerca");
+  m.style.display = "flex";
 }
+
+function cerrarModal() {
+  document.getElementById("modalAcerca").style.display = "none";
+}
+
+document.addEventListener("click", e => {
+  const modal = document.getElementById("modalAcerca");
+  if (e.target === modal) cerrarModal();
+});
 
 fetch(CSV_URL)
   .then(r => { if (!r.ok) throw new Error(); return r.text(); })
