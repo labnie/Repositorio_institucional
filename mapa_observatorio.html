@@ -194,6 +194,13 @@ body {
   margin: 0 auto;
 }
 
+.mapa-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1rem;
+  align-items: start;
+}
+
 .mapa-frame {
   width: 100%;
   height: calc(100vh - 100px);
@@ -205,6 +212,49 @@ body {
 }
 
 .mapa-frame iframe { width: 100%; height: 100%; border: none; }
+
+.diccionario-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.diccionario-titulo {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dorado);
+  background: var(--vino-oscuro);
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.diccionario-img {
+  width: 100%;
+  height: calc(100vh - 160px);
+  min-height: 500px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: var(--crema);
+}
+
+.btn-descargar {
+  display: block;
+  text-align: center;
+  padding: 9px 16px;
+  background: var(--vino);
+  color: white;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn-descargar:hover { background: var(--vino-claro); }
 
 /* ── FOOTER ── */
 .footer {
@@ -256,8 +306,15 @@ body {
 
 <!-- MAPA -->
 <div class="mapa-contenedor">
-  <div class="mapa-frame">
-    <iframe src="https://qgiscloud.com/tpineda/Obsigpd/" allowfullscreen></iframe>
+  <div class="mapa-layout">
+    <div class="mapa-frame">
+      <iframe src="https://qgiscloud.com/tpineda/Obsigpd/" allowfullscreen></iframe>
+    </div>
+    <div class="diccionario-panel">
+      <div class="diccionario-titulo">Guía de variables del observatorio</div>
+      <img src="https://labnie.github.io/Repositorio_institucional/Diccionario_OBSIGPD_2025.png" alt="Guía de variables" class="diccionario-img">
+      <a class="btn-descargar" href="https://labnie.github.io/Repositorio_institucional/Diccionario_OBSIGPD_2025.png" download="Diccionario_OBSIGPD_2025.png">⬇ Descargar guía de variables</a>
+    </div>
   </div>
 </div>
 
