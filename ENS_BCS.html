@@ -562,8 +562,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
 
 .pag-btn.nav { font-size: 16px; }
 .footer {
-  background: var(--vino-oscuro);
-  color: rgba(255,255,255,0.6);
+  background: var(--crema);
+  color: var(--texto-suave);
   text-align: center;
   padding: 1.25rem;
   font-size: 12px;
@@ -572,13 +572,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
   align-items: center;
   justify-content: center;
   gap: 10px;
+  border-top: 1px solid var(--borde);
 }
 
 .footer img {
   height: 22px;
   width: auto;
   object-fit: contain;
-  opacity: 0.7;
 }
 
 @media (max-width: 900px) {
@@ -635,18 +635,23 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
   <div class="hero-inner">
     <h1>Repositorio de Documentos Recepcionales Normalistas</h1>
     <p class="hero-sub">Laboratorio Normalista de Investigación Educativa · LABNIE</p>
-    <div class="hero-search">
-      <input type="text" id="searchInput" placeholder="Buscar por título, autor o escuela de práctica..." />
-      <button class="btn-limpiar" id="btnLimpiar" onclick="limpiarBusqueda()" title="Limpiar">✕</button>
-      <button class="btn-buscar" onclick="buscar()">Buscar</button>
-    </div>
-    <div class="quick-filters">
-      <span class="quick-label">Filtrar:</span>
-      <button class="quick-btn active" onclick="filtroRapido('', this)">Todo</button>
-      <button class="quick-btn" onclick="filtroRapido('Tesis', this)">Tesis</button>
-      <button class="quick-btn" onclick="filtroRapido('Informe de práctica', this)">Informes</button>
-      <button class="quick-btn" onclick="filtroRapido('Portafolio de evidencias', this)">Portafolios</button>
-      <span class="badge-filtros" id="badgeFiltros"></span>
+    <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap;">
+      <div style="flex:1;">
+        <div class="hero-search">
+          <input type="text" id="searchInput" placeholder="Buscar por título, autor o escuela de práctica..." />
+          <button class="btn-limpiar" id="btnLimpiar" onclick="limpiarBusqueda()" title="Limpiar">✕</button>
+          <button class="btn-buscar" onclick="buscar()">Buscar</button>
+        </div>
+        <div class="quick-filters">
+          <span class="quick-label">Filtrar:</span>
+          <button class="quick-btn active" onclick="filtroRapido('', this)">Todo</button>
+          <button class="quick-btn" onclick="filtroRapido('Tesis', this)">Tesis</button>
+          <button class="quick-btn" onclick="filtroRapido('Informe de práctica', this)">Informes</button>
+          <button class="quick-btn" onclick="filtroRapido('Portafolio de evidencias', this)">Portafolios</button>
+          <span class="badge-filtros" id="badgeFiltros"></span>
+        </div>
+      </div>
+      <img src="https://labnie.github.io/Repositorio_institucional/logotipo_H_ENSBCS.png" alt="ENS-BCS" style="height:80px; width:auto; object-fit:contain; opacity:0.9; flex-shrink:0;">
     </div>
   </div>
 </div>
