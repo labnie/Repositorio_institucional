@@ -719,6 +719,30 @@ mark {
 </head>
 <body>
 
+<!-- MODAL BIENVENIDA -->
+<div id="modalBienvenida" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:16px; max-width:600px; width:90%; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.25); animation: fadeIn 0.4s ease;">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.25rem; border-bottom:1px solid var(--borde); padding-bottom:1rem;">
+      <img src="https://labnie.github.io/Repositorio_institucional/logotipo-ens.png" alt="ENS" style="height:50px; width:auto;">
+      <div>
+        <div style="font-family:'Playfair Display',serif; font-size:17px; font-weight:500; color:var(--vino); line-height:1.3;">Repositorio Institucional de<br>Documentos Recepcionales</div>
+        <div style="font-size:11px; color:var(--texto-suave); margin-top:3px;">ENS "Profr. Enrique Estrada Lucero" · BCS</div>
+      </div>
+    </div>
+    <div style="width:48px; height:2px; background:var(--dorado); border-radius:2px; margin-bottom:1.25rem;"></div>
+    <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify;">
+      El Repositorio Institucional de Documentos Recepcionales de la Escuela Normal Superior del Estado de Baja California Sur "Profr. Enrique Estrada Lucero" es una plataforma de acceso abierto que concentra y preserva la producción académica con la que los estudiantes normalistas obtienen su grado de licenciatura. Su desarrollo y coordinación están a cargo del Laboratorio Normalista de Investigación Educativa (LABNIE), como parte de los esfuerzos institucionales orientados a fortalecer la gestión del conocimiento y la cultura investigativa en la formación inicial docente.
+    </p>
+    <div style="margin-top:1.5rem; display:flex; justify-content:center;">
+      <button onclick="cerrarBienvenida()" style="padding:10px 32px; background:var(--vino); color:white; border:none; border-radius:8px; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; transition:background 0.2s;">Explorar el repositorio</button>
+    </div>
+    <div style="margin-top:1rem; display:flex; align-items:center; gap:8px; justify-content:center;">
+      <img src="https://labnie.github.io/repositorio-normal/original-logo-2-lab.png" alt="LABNIE" style="height:20px; width:auto; opacity:0.6;">
+      <span style="font-size:11px; color:var(--texto-suave);">Laboratorio Normalista de Investigación Educativa</span>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL ACERCA DE -->
 <div id="modalAcerca" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
   <div style="background:white; border-radius:16px; max-width:580px; width:90%; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
@@ -730,10 +754,13 @@ mark {
       </div>
     </div>
     <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify;">
-      El Repositorio Institucional de la Escuela Normal Superior del Estado de Baja California Sur "Profr. Enrique Estrada Lucero" está coordinado desde el Laboratorio Normalista de Investigación Educativa, pero es un esfuerzo de la estructura académica de nuestra institución para poner en común, con acceso público, toda la producción académica de estudiantes normalistas de los últimos años. En este sentido, este repositorio no pudo haber sido posible sin el esfuerzo de la dirección, la subdirección académica, la coordinación de licenciatura, los departamentos académicos —que tienen a su cargo diversos programas de estudio— y, por supuesto, el esfuerzo de maestros y maestras asesoras que año tras año acompañan los procesos de titulación.
+      El Repositorio Institucional de Documentos Recepcionales de la Escuela Normal Superior del Estado de Baja California Sur "Profr. Enrique Estrada Lucero" es una plataforma de acceso abierto que concentra y preserva la producción académica con la que los estudiantes normalistas obtienen su grado de licenciatura. Su desarrollo y coordinación están a cargo del Laboratorio Normalista de Investigación Educativa (LABNIE), como parte de los esfuerzos institucionales orientados a fortalecer la gestión del conocimiento y la cultura investigativa en la formación inicial docente.
     </p>
-    <p style="font-size:12.5px; line-height:1.8; color:var(--texto-suave); text-align:justify; margin-top:1rem; padding-top:1rem; border-top:1px solid var(--borde);">
-      Los documentos publicados en este repositorio se distribuyen bajo licencia Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0), salvo que se indique lo contrario en un documento específico. Se permite su consulta, descarga y redistribución con fines no comerciales, siempre que se cite la fuente y se mantenga la misma licencia en cualquier obra derivada.
+    <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify; margin-top:1rem;">
+      Este repositorio es el resultado del trabajo colegiado de la comunidad académica de la institución: la dirección general, la subdirección académica, la coordinación de licenciatura, los departamentos académicos responsables de los distintos programas de estudio y, de manera fundamental, los docentes asesores que año con año acompañan y orientan los procesos de titulación de las y los normalistas.
+    </p>
+    <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify; margin-top:1rem;">
+      Los documentos aquí reunidos —tesis, informes de práctica profesional y portafolios de evidencias— constituyen un acervo de conocimiento pedagógico situado, generado desde y para la práctica docente en los contextos educativos de Baja California Sur.
     </p>
     <div style="margin-top:1.25rem; display:flex; justify-content:center;">
       <div style="width:48px; height:2px; background:var(--dorado); border-radius:2px;"></div>
@@ -1179,6 +1206,10 @@ function toggleFiltros() {
   label.textContent = visible ? "▼ Ver" : "▲ Ocultar";
 }
 
+function cerrarBienvenida() {
+  document.getElementById("modalBienvenida").style.display = "none";
+}
+
 function abrirModal() {
   const m = document.getElementById("modalAcerca");
   m.style.display = "flex";
@@ -1204,6 +1235,10 @@ fetch(CSV_URL)
     poblarFiltrosInicial(allDocs);
     poblarSidebar(allDocs);
     poblarEstadisticas(allDocs);
+
+    // Mostrar bienvenida
+    const bienvenida = document.getElementById("modalBienvenida");
+    bienvenida.style.display = "flex";
 
     // Mostrar todos los documentos desde el inicio, paginados
     resultadosActuales = [...allDocs].sort((a, b) => (b["Año"] || "").localeCompare(a["Año"] || ""));
