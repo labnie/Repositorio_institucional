@@ -620,10 +620,100 @@ mark {
 }
 
 @media (max-width: 900px) {
-  .main-layout { grid-template-columns: 1fr; }
-  .sidebar { position: static; }
+  /* NAVBAR */
+  .navbar { padding: 0 1rem; }
+  .navbar-divider { display: none; }
   .navbar-menu { display: none; }
-  .stats-inner { gap: 1rem; }
+  .navbar-menu.abierto {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    width: 100%;
+    background: var(--vino-oscuro);
+    padding: 1rem;
+    gap: 4px;
+    z-index: 99;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .navbar-menu.abierto a { padding: 10px 14px; font-size: 14px; }
+  .btn-hamburguesa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 8px;
+  }
+
+  /* HERO */
+  .hero { padding: 1.25rem 1rem; }
+  .hero h1 { font-size: 18px; }
+  .hero-sub { font-size: 12px; margin-bottom: 1rem; }
+  .hero-search { flex-direction: column; gap: 8px; }
+  .hero-search input { font-size: 14px; padding: 11px 14px; }
+  .btn-buscar { width: 100%; padding: 11px; }
+  .btn-limpiar { right: 12px; }
+  .quick-filters { gap: 6px; }
+  .quick-btn { font-size: 11px; padding: 4px 10px; }
+
+  /* ESTADÍSTICAS */
+  .stats-bar { padding: 0.75rem 1rem; overflow-x: auto; }
+  .stats-inner { gap: 1rem; flex-wrap: nowrap; }
+  .stat-num { font-size: 18px; }
+  .stat-label { font-size: 11px; }
+
+  /* LAYOUT */
+  .main-layout {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  /* SIDEBARS ocultos en móvil, se muestran con botón */
+  .sidebar { display: none; }
+  .sidebar.visible { display: block; position: static; }
+
+  /* BOTÓN FILTROS MÓVIL */
+  .btn-filtros-movil {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--texto);
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+  .btn-filtros-movil span { color: var(--vino); font-weight: 600; }
+
+  /* TARJETAS */
+  .card { flex-direction: column; gap: 10px; }
+  .card-actions { width: 100%; }
+  .btn-ver { width: 100%; text-align: center; padding: 10px; font-size: 13px; }
+  .card-icon { width: 36px; height: 36px; font-size: 10px; }
+
+  /* PAGINACIÓN */
+  .pag-btn { width: 40px; height: 40px; font-size: 14px; }
+
+  /* FOOTER */
+  .footer { flex-direction: column; gap: 6px; padding: 1rem; font-size: 11px; text-align: center; }
+}
+
+@media (min-width: 901px) {
+  .btn-hamburguesa { display: none; }
+  .btn-filtros-movil { display: none; }
 }
 </style>
 </head>
@@ -661,11 +751,12 @@ mark {
     </div>
   </a>
   <div class="navbar-divider"></div>
-  <div class="navbar-menu">
+  <div class="navbar-menu" id="navbarMenu">
     <a href="#" class="active">Inicio</a>
     <a href="mapa_observatorio.html" class="observatorio">🗺 Observatorio</a>
-    <a href="#" onclick="abrirModal(); return false;">Acerca de</a>
+    <a href="#" onclick="abrirModal(); cerrarMenu(); return false;">Acerca de</a>
   </div>
+  <button class="btn-hamburguesa" onclick="toggleMenu()" id="btnHamburguesa">☰</button>
 </nav>
 
 <!-- HERO -->
@@ -729,6 +820,9 @@ mark {
 
   <!-- RESULTADOS -->
   <div class="results-area">
+    <button class="btn-filtros-movil" onclick="toggleFiltros()">
+      Filtros y colecciones <span id="labelFiltros">▼ Ver</span>
+    </button>
     <div class="results-header">
       <div class="results-count" id="resultsHeader"></div>
       <select class="ordenar-select" id="ordenarSelect" onchange="buscar()" style="display:none;">
@@ -1057,6 +1151,28 @@ function buscar() {
   const total = resultadosActuales.length;
   header.innerHTML = `<div class="results-count">Mostrando <span>${total} documento${total !== 1 ? "s" : ""}</span></div>`;
   mostrarPagina(1);
+}
+
+function toggleMenu() {
+  const menu = document.getElementById("navbarMenu");
+  const btn = document.getElementById("btnHamburguesa");
+  menu.classList.toggle("abierto");
+  btn.textContent = menu.classList.contains("abierto") ? "✕" : "☰";
+}
+
+function cerrarMenu() {
+  const menu = document.getElementById("navbarMenu");
+  const btn = document.getElementById("btnHamburguesa");
+  menu.classList.remove("abierto");
+  btn.textContent = "☰";
+}
+
+function toggleFiltros() {
+  const sidebars = document.querySelectorAll(".sidebar");
+  const label = document.getElementById("labelFiltros");
+  const visible = sidebars[0].classList.contains("visible");
+  sidebars.forEach(s => s.classList.toggle("visible"));
+  label.textContent = visible ? "▼ Ver" : "▲ Ocultar";
 }
 
 function abrirModal() {
