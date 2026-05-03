@@ -984,32 +984,6 @@ function renderTarjetas(docs) {
     </div>`;
   }).join("");
 }
-  return docs.map((d, i) => {
-    const icono = iconoTipo(d["Tipo de documento"]);
-    const q = document.getElementById("searchInput").value.trim();
-    const titulo = resaltar(d["Título"] || "Sin título", q);
-    return `
-    <div class="card" style="animation-delay:${Math.min(i*0.04,0.3)}s">
-      <div class="card-icon ${icono.clase}">${icono.sigla}</div>
-      <div class="card-body">
-        <div class="card-titulo">${titulo}</div>
-        <div class="card-meta">
-          ${d["Autor"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Autor"]}</span>` : ""}
-          ${d["Año"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Año"]}</span>` : ""}
-          ${d["Sede"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Sede"]}</span>` : ""}
-          ${d["Escuela de práctica"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Escuela de práctica"]}</span>` : ""}
-        </div>
-        <div class="card-tags">
-          ${d["Tipo de documento"] ? `<span class="tag tag-tipo">${d["Tipo de documento"]}</span>` : ""}
-          ${d["Programa de estudio"] ? `<span class="tag tag-programa">${d["Programa de estudio"]}</span>` : ""}
-          ${d["Plan de estudio"] ? `<span class="tag tag-anio">Plan ${d["Plan de estudio"]}</span>` : ""}
-        </div>
-      </div>
-      ${d["Liga"] ? `<div class="card-actions"><a class="btn-ver" href="${d["Liga"]}" target="_blank">Ver documento</a></div>` : ""}
-    </div>`;
-  }).join("");
-}
-
 function mostrarPagina(pagina) {
   paginaActual = pagina;
   const totalPaginas = Math.ceil(resultadosActuales.length / DOCS_POR_PAGINA);
