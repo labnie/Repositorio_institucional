@@ -1220,5 +1220,276 @@ fetch(CSV_URL)
 
 document.getElementById("searchInput").addEventListener("keyup", e => { if (e.key === "Enter") buscar(); });
 </script>
+
+<!-- ASISTENTE IA -->
+<style>
+.chat-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background: var(--vino);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  z-index: 200;
+  transition: transform 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-btn:hover { background: var(--vino-claro); transform: scale(1.08); }
+
+.chat-panel {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  width: 360px;
+  max-height: 520px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--borde);
+}
+
+.chat-panel.abierto { display: flex; }
+
+.chat-header {
+  background: var(--vino-oscuro);
+  color: white;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-header-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(201,168,76,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.chat-header-info strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.chat-header-info small {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.chat-cerrar {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.7;
+  line-height: 1;
+}
+
+.chat-cerrar:hover { opacity: 1; }
+
+.chat-mensajes {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mensaje {
+  max-width: 85%;
+  padding: 9px 13px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.mensaje.asistente {
+  background: #f5ede8;
+  color: var(--texto);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.mensaje.usuario {
+  background: var(--vino);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.mensaje.cargando {
+  background: #f5ede8;
+  color: var(--texto-suave);
+  align-self: flex-start;
+  font-style: italic;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--borde);
+  background: white;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  resize: none;
+}
+
+.chat-input:focus { border-color: var(--vino); }
+
+.chat-enviar {
+  padding: 8px 14px;
+  background: var(--vino);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.chat-enviar:hover { background: var(--vino-claro); }
+.chat-enviar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 900px) {
+  .chat-panel { width: calc(100vw - 32px); right: 16px; bottom: 80px; }
+  .chat-btn { bottom: 16px; right: 16px; }
+}
+</style>
+
+<!-- BOTÓN CHAT -->
+<button class="chat-btn" onclick="toggleChat()" title="Asistente del repositorio">🤖</button>
+
+<!-- PANEL CHAT -->
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header">
+    <div class="chat-header-icon">🤖</div>
+    <div class="chat-header-info">
+      <strong>Asistente del Repositorio</strong>
+      <small>Pregúntame sobre los documentos</small>
+    </div>
+    <button class="chat-cerrar" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-mensajes" id="chatMensajes">
+    <div class="mensaje asistente">
+      Hola 👋 Soy el asistente del Repositorio Institucional de la ENS-BCS. Puedes preguntarme cosas como:<br><br>
+      • <em>"¿Hay tesis sobre autismo?"</em><br>
+      • <em>"Muéstrame documentos de educación física del 2023"</em><br>
+      • <em>"¿Cuántos portafolios hay de la sede La Paz?"</em>
+    </div>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Escribe tu pregunta..." />
+    <button class="chat-enviar" id="chatEnviar" onclick="enviarMensaje()">Enviar</button>
+  </div>
+</div>
+
+<script>
+function toggleChat() {
+  const panel = document.getElementById("chatPanel");
+  panel.classList.toggle("abierto");
+  if (panel.classList.contains("abierto")) {
+    document.getElementById("chatInput").focus();
+  }
+}
+
+document.getElementById("chatInput").addEventListener("keyup", e => {
+  if (e.key === "Enter") enviarMensaje();
+});
+
+function agregarMensaje(texto, tipo) {
+  const cont = document.getElementById("chatMensajes");
+  const div = document.createElement("div");
+  div.className = `mensaje ${tipo}`;
+  div.innerHTML = texto;
+  cont.appendChild(div);
+  cont.scrollTop = cont.scrollHeight;
+  return div;
+}
+
+async function enviarMensaje() {
+  const input = document.getElementById("chatInput");
+  const btn = document.getElementById("chatEnviar");
+  const pregunta = input.value.trim();
+  if (!pregunta || btn.disabled) return;
+
+  agregarMensaje(pregunta, "usuario");
+  input.value = "";
+  btn.disabled = true;
+  const cargando = agregarMensaje("Buscando en el repositorio...", "cargando");
+
+  // Preparar resumen de los documentos para el contexto
+  const resumen = allDocs.slice(0, 1000).map(d =>
+    `Título: ${d["Título"] || ""} | Autor: ${d["Autor"] || ""} | Tipo: ${d["Tipo de documento"] || ""} | Programa: ${d["Programa de estudio"] || ""} | Sede: ${d["Sede"] || ""} | Año: ${d["Año"] || ""} | Escuela: ${d["Escuela de práctica"] || ""}`
+  ).join("\n");
+
+  const sistemaPrompt = `Eres el asistente del Repositorio Institucional de la Escuela Normal Superior del Estado de Baja California Sur "Profr. Enrique Estrada Lucero". 
+Tu función es ayudar a los usuarios a encontrar documentos recepcionales (tesis, informes de práctica y portafolios de evidencias) en el repositorio.
+Responde siempre en español, de forma breve y útil.
+Cuando menciones documentos específicos, incluye el título y el autor.
+Si el usuario pide documentos sobre un tema, busca en la lista y menciona los más relevantes (máximo 5).
+Si preguntan estadísticas, calcula a partir de los datos.
+Total de documentos en el repositorio: ${allDocs.length}
+
+Lista de documentos disponibles:
+${resumen}`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: sistemaPrompt,
+        messages: [{ role: "user", content: pregunta }]
+      })
+    });
+
+    const data = await response.json();
+    cargando.remove();
+
+    const respuesta = data.content?.[0]?.text || "No pude procesar tu pregunta. Intenta de nuevo.";
+    agregarMensaje(respuesta.replace(/\n/g, "<br>"), "asistente");
+
+  } catch (err) {
+    cargando.remove();
+    agregarMensaje("Hubo un error al conectar con el asistente. Intenta de nuevo.", "asistente");
+  }
+
+  btn.disabled = false;
+  input.focus();
+}
+</script>
 </body>
 </html>
