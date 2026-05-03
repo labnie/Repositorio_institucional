@@ -1123,10 +1123,12 @@ function buscar() {
   const ordenarSelect = document.getElementById("ordenarSelect");
 
   if (!q && !tipo && !prog && !anio && !escuela && !sede) {
-    header.innerHTML = "";
-    pag.innerHTML = "";
-    ordenarSelect.style.display = "none";
-    list.innerHTML = `<div class="estado"><div class="estado-icono">🔎</div><p>Escribe una palabra clave o selecciona un filtro<br>para encontrar documentos.</p></div>`;
+    resultadosActuales = ordenarResultados(allDocs, "reciente");
+    const total = resultadosActuales.length;
+    ordenarSelect.style.display = "block";
+    document.getElementById("ordenarSelect").value = "reciente";
+    header.innerHTML = `<div class="results-count">Mostrando <span>${total} documento${total !== 1 ? "s" : ""}</span></div>`;
+    mostrarPagina(1);
     return;
   }
 
@@ -1204,13 +1206,13 @@ fetch(CSV_URL)
     poblarSidebar(allDocs);
     poblarEstadisticas(allDocs);
 
-    // Mostrar 10 documentos más recientes al inicio
-    const recientes = [...allDocs]
-      .sort((a, b) => (b["Año"] || "").localeCompare(a["Año"] || ""))
-      .slice(0, 10);
-    document.getElementById("resultsHeader").innerHTML = `<div class="results-count" style="font-size:12px; color:var(--texto-suave);">Documentos recientes — usa el buscador para encontrar algo específico</div>`;
-    document.getElementById("resultsList").innerHTML = renderTarjetas(recientes);
-    document.getElementById("paginacion").innerHTML = "";
+    // Mostrar todos los documentos desde el inicio, paginados
+    resultadosActuales = [...allDocs].sort((a, b) => (b["Año"] || "").localeCompare(a["Año"] || ""));
+    const total = resultadosActuales.length;
+    document.getElementById("ordenarSelect").style.display = "block";
+    document.getElementById("ordenarSelect").value = "reciente";
+    document.getElementById("resultsHeader").innerHTML = `<div class="results-count">Mostrando <span>${total} documento${total !== 1 ? "s" : ""}</span></div>`;
+    mostrarPagina(1);
   })
   .catch(() => {
     document.getElementById("resultsList").innerHTML = `<div class="estado"><div class="estado-icono">⚠️</div><p>No se pudo conectar con la hoja de Google Sheets.</p></div>`;
