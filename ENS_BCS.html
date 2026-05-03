@@ -1203,6 +1203,14 @@ fetch(CSV_URL)
     poblarFiltrosInicial(allDocs);
     poblarSidebar(allDocs);
     poblarEstadisticas(allDocs);
+
+    // Mostrar 10 documentos más recientes al inicio
+    const recientes = [...allDocs]
+      .sort((a, b) => (b["Año"] || "").localeCompare(a["Año"] || ""))
+      .slice(0, 10);
+    document.getElementById("resultsHeader").innerHTML = `<div class="results-count" style="font-size:12px; color:var(--texto-suave);">Documentos recientes — usa el buscador para encontrar algo específico</div>`;
+    document.getElementById("resultsList").innerHTML = renderTarjetas(recientes);
+    document.getElementById("paginacion").innerHTML = "";
   })
   .catch(() => {
     document.getElementById("resultsList").innerHTML = `<div class="estado"><div class="estado-icono">⚠️</div><p>No se pudo conectar con la hoja de Google Sheets.</p></div>`;
