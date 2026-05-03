@@ -18,6 +18,8 @@
 <meta name="twitter:title" content="Repositorio Institucional de Documentos Recepcionales — ENS-BCS">
 <meta name="twitter:description" content="Accede a los documentos recepcionales de egresados normalistas de la Escuela Normal Superior del Estado de Baja California Sur.">
 <meta name="twitter:image" content="https://labnie.github.io/Repositorio_institucional/Caratula_repositorio.png">
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="https://labnie.github.io/Repositorio_institucional/logotipo-ens.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -410,6 +412,28 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
   border-radius: 99px;
 }
 
+.ordenar-select {
+  padding: 5px 10px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--texto-suave);
+  background: white;
+  cursor: pointer;
+  outline: none;
+}
+
+.ordenar-select:focus { border-color: var(--vino); }
+
+mark {
+  background: #fff3cd;
+  color: var(--vino);
+  font-weight: 600;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
 /* ── TARJETA DE DOCUMENTO ── */
 .card {
   background: white;
@@ -707,6 +731,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
   <div class="results-area">
     <div class="results-header">
       <div class="results-count" id="resultsHeader"></div>
+      <select class="ordenar-select" id="ordenarSelect" onchange="buscar()" style="display:none;">
+        <option value="relevancia">Relevancia</option>
+        <option value="reciente">Más reciente</option>
+        <option value="antiguo">Más antiguo</option>
+        <option value="az">Título A–Z</option>
+        <option value="za">Título Z–A</option>
+      </select>
     </div>
     <div id="resultsList">
       <div class="estado">
@@ -905,14 +936,36 @@ const DOCS_POR_PAGINA = 10;
 let paginaActual = 1;
 let resultadosActuales = [];
 
-function renderTarjetas(docs) {
+function resaltar(texto, query) {
+  if (!query) return texto || "";
+  const palabras = normalizar(query).split(/\s+/).filter(Boolean);
+  let result = texto || "";
+  palabras.forEach(p => {
+    const regex = new RegExp(`(${p})`, "gi");
+    result = result.replace(regex, "<mark>$1</mark>");
+  });
+  return result;
+}
+
+function ordenarResultados(docs, criterio) {
+  const copia = [...docs];
+  switch (criterio) {
+    case "reciente": return copia.sort((a, b) => (b["Año"] || "").localeCompare(a["Año"] || ""));
+    case "antiguo": return copia.sort((a, b) => (a["Año"] || "").localeCompare(b["Año"] || ""));
+    case "az": return copia.sort((a, b) => (a["Título"] || "").localeCompare(b["Título"] || "", "es"));
+    case "za": return copia.sort((a, b) => (b["Título"] || "").localeCompare(a["Título"] || "", "es"));
+    default: return copia;
+  }
+}
   return docs.map((d, i) => {
     const icono = iconoTipo(d["Tipo de documento"]);
+    const q = document.getElementById("searchInput").value.trim();
+    const titulo = resaltar(d["Título"] || "Sin título", q);
     return `
     <div class="card" style="animation-delay:${Math.min(i*0.04,0.3)}s">
       <div class="card-icon ${icono.clase}">${icono.sigla}</div>
       <div class="card-body">
-        <div class="card-titulo">${d["Título"] || "Sin título"}</div>
+        <div class="card-titulo">${titulo}</div>
         <div class="card-meta">
           ${d["Autor"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Autor"]}</span>` : ""}
           ${d["Año"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Año"]}</span>` : ""}
@@ -962,21 +1015,24 @@ function buscar() {
   const anio = document.getElementById("filtroAnio").value;
   const escuela = document.getElementById("filtroEscuela").value;
   const sede = document.getElementById("filtroSede").value;
+  const orden = document.getElementById("ordenarSelect").value;
 
   actualizarUI(q, tipo, prog, anio, escuela, sede);
 
   const header = document.getElementById("resultsHeader");
   const list = document.getElementById("resultsList");
   const pag = document.getElementById("paginacion");
+  const ordenarSelect = document.getElementById("ordenarSelect");
 
   if (!q && !tipo && !prog && !anio && !escuela && !sede) {
     header.innerHTML = "";
     pag.innerHTML = "";
+    ordenarSelect.style.display = "none";
     list.innerHTML = `<div class="estado"><div class="estado-icono">🔎</div><p>Escribe una palabra clave o selecciona un filtro<br>para encontrar documentos.</p></div>`;
     return;
   }
 
-  resultadosActuales = allDocs.filter(d => {
+  let filtrados = allDocs.filter(d => {
     const texto = [d["Título"], d["Autor"], d["Escuela de práctica"], d["Plan de estudio"], d["Sede"]].join(" ");
     return (!q || coincide(texto, q)) &&
            (!tipo || d["Tipo de documento"] === tipo) &&
@@ -986,15 +1042,18 @@ function buscar() {
            (!sede || d["Sede"] === sede);
   });
 
-  if (resultadosActuales.length === 0) {
+  if (filtrados.length === 0) {
     header.innerHTML = "";
     pag.innerHTML = "";
+    ordenarSelect.style.display = "none";
     list.innerHTML = `<div class="estado"><div class="estado-icono">🔍</div><p>No encontramos documentos con esos términos.<br>Intenta con sinónimos, menos filtros, o verifica la ortografía.</p></div>`;
     return;
   }
 
+  resultadosActuales = ordenarResultados(filtrados, orden);
+  ordenarSelect.style.display = "block";
+
   const total = resultadosActuales.length;
-  const totalPaginas = Math.ceil(total / DOCS_POR_PAGINA);
   header.innerHTML = `<div class="results-count">Mostrando <span>${total} documento${total !== 1 ? "s" : ""}</span></div>`;
   mostrarPagina(1);
 }
