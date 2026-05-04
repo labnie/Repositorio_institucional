@@ -721,22 +721,36 @@ mark {
 
 <!-- MODAL BIENVENIDA -->
 <div id="modalBienvenida" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999; align-items:center; justify-content:center;">
-  <div style="background:white; border-radius:16px; max-width:600px; width:90%; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.25); animation: fadeIn 0.4s ease;">
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.25rem; border-bottom:1px solid var(--borde); padding-bottom:1rem;">
+  <div style="background:white; border-radius:16px; max-width:620px; width:90%; max-height:90vh; display:flex; flex-direction:column; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.25);">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.25rem; border-bottom:1px solid var(--borde); padding-bottom:1rem; flex-shrink:0;">
       <img src="https://labnie.github.io/Repositorio_institucional/logotipo-ens.png" alt="ENS" style="height:50px; width:auto;">
       <div>
         <div style="font-family:'Playfair Display',serif; font-size:17px; font-weight:500; color:var(--vino); line-height:1.3;">Repositorio Institucional de<br>Documentos Recepcionales</div>
         <div style="font-size:11px; color:var(--texto-suave); margin-top:3px;">ENS "Profr. Enrique Estrada Lucero" · BCS</div>
       </div>
     </div>
-    <div style="width:48px; height:2px; background:var(--dorado); border-radius:2px; margin-bottom:1.25rem;"></div>
-    <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify;">
-      El Repositorio Institucional de Documentos Recepcionales de la Escuela Normal Superior del Estado de Baja California Sur "Profr. Enrique Estrada Lucero" es una plataforma de acceso abierto que concentra y preserva la producción académica con la que los estudiantes normalistas obtienen su grado de licenciatura. Su desarrollo y coordinación están a cargo del Laboratorio Normalista de Investigación Educativa (LABNIE), como parte de los esfuerzos institucionales orientados a fortalecer la gestión del conocimiento y la cultura investigativa en la formación inicial docente.
-    </p>
-    <div style="margin-top:1.5rem; display:flex; justify-content:center;">
+    <div style="width:48px; height:2px; background:var(--dorado); border-radius:2px; margin-bottom:1.25rem; flex-shrink:0;"></div>
+    <div style="overflow-y:auto; padding-right:8px; flex:1;">
+      <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify;">
+        El Repositorio Institucional de Documentos Recepcionales de la Escuela Normal Superior del Estado de Baja California Sur "Profr. Enrique Estrada Lucero" es una plataforma de acceso abierto que concentra, organiza y pone a disposición la producción académica mediante la cual las y los estudiantes normalistas obtienen su grado de licenciatura. Su desarrollo y coordinación están a cargo del Laboratorio Normalista de Investigación Educativa (LABNIE), como parte de los esfuerzos institucionales orientados a fortalecer la gestión del conocimiento y la cultura investigativa en la formación inicial docente.
+      </p>
+      <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify; margin-top:1rem;">
+        Este repositorio es resultado del trabajo colegiado de la comunidad académica de la institución: la dirección general, la subdirección académica, las coordinaciones de licenciatura, los departamentos académicos responsables de los distintos programas de estudio y, de manera fundamental, las y los docentes asesores que acompañan los procesos de titulación.
+      </p>
+      <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify; margin-top:1rem;">
+        Los documentos aquí reunidos (tesis de investigación, informes de práctica profesional y portafolios de evidencias) constituyen un acervo de conocimiento pedagógico situado, generado desde y para la práctica docente en los diversos contextos educativos de Baja California Sur.
+      </p>
+      <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify; margin-top:1rem;">
+        De manera complementaria, el repositorio se articula con un <em>Observatorio de Información Geográfica</em> para el análisis territorial de la práctica docente, que permite vincular los trabajos recepcionales con las escuelas de práctica y sus contextos socioeducativos. Esta integración posibilita una lectura georreferenciada de la formación docente, favoreciendo el análisis de la distribución de las prácticas, la identificación de problemáticas educativas en el territorio y la construcción de conocimiento a partir de su anclaje contextual.
+      </p>
+      <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify; margin-top:1rem;">
+        En conjunto, esta plataforma busca no solo preservar la producción académica normalista, sino también contribuir a su análisis, visibilización y aprovechamiento para la mejora de la formación docente y la comprensión de los procesos educativos en la entidad.
+      </p>
+    </div>
+    <div style="margin-top:1.5rem; display:flex; justify-content:center; flex-shrink:0;">
       <button onclick="cerrarBienvenida()" style="padding:10px 32px; background:var(--vino); color:white; border:none; border-radius:8px; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; transition:background 0.2s;">Explorar el repositorio</button>
     </div>
-    <div style="margin-top:1rem; display:flex; align-items:center; gap:8px; justify-content:center;">
+    <div style="margin-top:1rem; display:flex; align-items:center; gap:8px; justify-content:center; flex-shrink:0;">
       <img src="https://labnie.github.io/repositorio-normal/original-logo-2-lab.png" alt="LABNIE" style="height:20px; width:auto; opacity:0.6;">
       <span style="font-size:11px; color:var(--texto-suave);">Laboratorio Normalista de Investigación Educativa</span>
     </div>
