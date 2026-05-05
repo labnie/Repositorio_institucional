@@ -256,7 +256,17 @@ body {
 
 .btn-descargar:hover { background: var(--vino-claro); }
 
-/* ── FOOTER ── */
+@media (max-width: 900px) {
+  .navbar { padding: 0 1rem; }
+  .navbar-menu { display: none; }
+  .hero { padding: 1rem; }
+  .hero-inner { flex-direction: column; gap: 1rem; }
+  .btn-regresar { width: 100%; text-align: center; }
+  .mapa-contenedor { padding: 0.75rem 1rem; }
+  .mapa-layout { grid-template-columns: 1fr; }
+  .mapa-frame { height: 60vh; min-height: 350px; }
+  .diccionario-img { height: auto; max-height: 500px; }
+}
 .footer {
   background: var(--vino-oscuro);
   color: rgba(255,255,255,0.6);

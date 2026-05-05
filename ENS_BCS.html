@@ -1230,6 +1230,7 @@ function toggleFiltros() {
 
 function cerrarBienvenida() {
   document.getElementById("modalBienvenida").style.display = "none";
+  sessionStorage.setItem('bienvenidaVista', 'true');
 }
 
 function abrirModal() {
@@ -1258,9 +1259,10 @@ fetch(CSV_URL)
     poblarSidebar(allDocs);
     poblarEstadisticas(allDocs);
 
-    // Mostrar bienvenida
-    const bienvenida = document.getElementById("modalBienvenida");
-    bienvenida.style.display = "flex";
+    // Mostrar bienvenida solo si no se ha visto antes en esta sesión
+    if (!sessionStorage.getItem('bienvenidaVista')) {
+      document.getElementById("modalBienvenida").style.display = "flex";
+    }
 
     // Mostrar todos los documentos desde el inicio, paginados
     resultadosActuales = [...allDocs].sort((a, b) => (b["Año"] || "").localeCompare(a["Año"] || ""));
