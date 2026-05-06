@@ -994,10 +994,10 @@ function formatearAutorAPA(nombreCompleto) {
   if (!nombreCompleto) return "";
   const partes = nombreCompleto.trim().split(/\s+/);
   if (partes.length === 1) return partes[0];
-  // Último elemento como apellido, resto como nombres
   const apellido = partes[partes.length - 1];
-  const nombres = partes.slice(0, -1).map(n => n[0] + ".").join(" ");
-  return `${apellido}, ${nombres}`;
+  const apellidoFormateado = apellido.charAt(0).toUpperCase() + apellido.slice(1).toLowerCase();
+  const nombres = partes.slice(0, -1).map(n => n[0].toUpperCase() + ".").join(" ");
+  return `${apellidoFormateado}, ${nombres}`;
 }
 
 function tipoDocumentoAPA(tipo) {
@@ -1193,7 +1193,7 @@ function renderTarjetas(docs) {
           ${d["Plan de estudio"] ? `<span class="tag tag-anio">Plan ${d["Plan de estudio"]}</span>` : ""}
         </div>
       </div>
-      ${d["Liga"] ? `<div class="card-actions"><a class="btn-ver" href="${d["Liga"]}" target="_blank">Ver documento</a><button class="btn-ver" style="background:white; color:var(--vino); border:1.5px solid var(--vino); cursor:pointer; margin-top:6px;" onclick="mostrarAPA(${allDocs.indexOf(d)})">Citar en APA 7</button></div>` : ""}
+      ${d["Liga"] ? `<div class="card-actions"><a class="btn-ver" href="${d["Liga"]}" target="_blank">Ver documento</a><button class="btn-ver" style="background:white; color:var(--vino); border:1.5px solid var(--vino); cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarAPA(${allDocs.indexOf(d)})">Referencia APA7</button></div>` : ""}
     </div>`;
   }).join("");
 }
