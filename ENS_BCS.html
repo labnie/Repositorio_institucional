@@ -719,6 +719,25 @@ mark {
 </head>
 <body>
 
+<!-- MODAL APA -->
+<div id="modalAPA" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:16px; max-width:560px; width:90%; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem; border-bottom:1px solid var(--borde); padding-bottom:1rem;">
+      <div style="width:36px; height:36px; background:#f5ede8; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">📄</div>
+      <div>
+        <div style="font-size:14px; font-weight:600; color:var(--vino);">Referencia APA 7</div>
+        <div style="font-size:11px; color:var(--texto-suave);">Lista para usar en trabajos académicos</div>
+      </div>
+      <button onclick="cerrarAPA()" style="margin-left:auto; background:none; border:none; font-size:18px; cursor:pointer; color:var(--texto-suave);">✕</button>
+    </div>
+    <div style="background:#faf7f4; border:1px solid var(--borde); border-radius:10px; padding:1rem; font-size:13.5px; line-height:1.8; color:var(--texto);" id="apaTexto"></div>
+    <div style="margin-top:1rem; display:flex; gap:8px; justify-content:flex-end;">
+      <button onclick="cerrarAPA()" style="padding:8px 16px; background:white; border:1px solid var(--borde); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer; color:var(--texto-suave);">Cerrar</button>
+      <button id="btnCopiarAPA" onclick="copiarAPA()" style="padding:8px 16px; background:var(--vino); color:white; border:none; border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer;">Copiar referencia</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL BIENVENIDA -->
 <div id="modalBienvenida" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999; align-items:center; justify-content:center;">
   <div style="background:white; border-radius:16px; max-width:620px; width:90%; max-height:90vh; display:flex; flex-direction:column; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.25);">
@@ -971,6 +990,55 @@ function coincide(texto, query) {
   });
 }
 
+function formatearAutorAPA(nombreCompleto) {
+  if (!nombreCompleto) return "";
+  const partes = nombreCompleto.trim().split(/\s+/);
+  if (partes.length === 1) return partes[0];
+  // Último elemento como apellido, resto como nombres
+  const apellido = partes[partes.length - 1];
+  const nombres = partes.slice(0, -1).map(n => n[0] + ".").join(" ");
+  return `${apellido}, ${nombres}`;
+}
+
+function tipoDocumentoAPA(tipo) {
+  const t = (tipo || "").toLowerCase();
+  if (t.includes("tesis")) return "Tesis de licenciatura";
+  if (t.includes("informe")) return "Informe de práctica profesional";
+  if (t.includes("portafolio")) return "Portafolio de evidencias";
+  return "Documento recepcional";
+}
+
+function generarAPA(d) {
+  const autor = formatearAutorAPA(d["Autor"]);
+  const anio = d["Año"] || "s.f.";
+  const titulo = d["Título"] || "Sin título";
+  const tipo = tipoDocumentoAPA(d["Tipo de documento"]);
+  const institucion = "Escuela Normal Superior del Estado de Baja California Sur \"Profr. Enrique Estrada Lucero\"";
+  const liga = d["Liga"] ? ` ${d["Liga"]}` : "";
+  return `${autor} (${anio}). <em>${titulo}</em> [${tipo}]. ${institucion}.${liga}`;
+}
+
+function mostrarAPA(indice) {
+  const d = allDocs[indice];
+  if (!d) return;
+  const referencia = generarAPA(d);
+  document.getElementById("apaTexto").innerHTML = referencia;
+  document.getElementById("modalAPA").style.display = "flex";
+}
+
+function cerrarAPA() {
+  document.getElementById("modalAPA").style.display = "none";
+}
+
+function copiarAPA() {
+  const texto = document.getElementById("apaTexto").innerText;
+  navigator.clipboard.writeText(texto).then(() => {
+    const btn = document.getElementById("btnCopiarAPA");
+    btn.textContent = "¡Copiado!";
+    setTimeout(() => btn.textContent = "Copiar referencia", 2000);
+  });
+}
+
 function iconoTipo(tipo) {
   const t = (tipo || "").toLowerCase();
   if (t.includes("tesis")) return { sigla: "TES", clase: "icon-tesis" };
@@ -1125,7 +1193,7 @@ function renderTarjetas(docs) {
           ${d["Plan de estudio"] ? `<span class="tag tag-anio">Plan ${d["Plan de estudio"]}</span>` : ""}
         </div>
       </div>
-      ${d["Liga"] ? `<div class="card-actions"><a class="btn-ver" href="${d["Liga"]}" target="_blank">Ver documento</a></div>` : ""}
+      ${d["Liga"] ? `<div class="card-actions"><a class="btn-ver" href="${d["Liga"]}" target="_blank">Ver documento</a><button class="btn-ver" style="background:white; color:var(--vino); border:1.5px solid var(--vino); cursor:pointer; margin-top:6px;" onclick="mostrarAPA(${allDocs.indexOf(d)})">Citar en APA 7</button></div>` : ""}
     </div>`;
   }).join("");
 }
