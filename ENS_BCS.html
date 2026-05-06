@@ -1130,7 +1130,7 @@ function filtroRapido(tipo, btn) {
   buscar();
 }
 
-function actualizarUI(q, tipo, prog, anio, escuela, sede) {
+function actualizarUI(q, tipo, prog, anio, escuela, sede, asesor) {
   document.getElementById("btnLimpiar").style.display = q ? "block" : "none";
   const n = [tipo, prog, anio, escuela, sede, asesor].filter(Boolean).length;
   const badge = document.getElementById("badgeFiltros");
@@ -1237,14 +1237,14 @@ function buscar() {
   const asesor = document.getElementById("filtroAsesor").value;
   const orden = document.getElementById("ordenarSelect").value;
 
-  actualizarUI(q, tipo, prog, anio, escuela, sede);
+  actualizarUI(q, tipo, prog, anio, escuela, sede, asesor);
 
   const header = document.getElementById("resultsHeader");
   const list = document.getElementById("resultsList");
   const pag = document.getElementById("paginacion");
   const ordenarSelect = document.getElementById("ordenarSelect");
 
-  if (!q && !tipo && !prog && !anio && !escuela && !sede) {
+  if (!q && !tipo && !prog && !anio && !escuela && !sede && !asesor) {
     resultadosActuales = ordenarResultados(allDocs, "reciente");
     const total = resultadosActuales.length;
     ordenarSelect.style.display = "block";
