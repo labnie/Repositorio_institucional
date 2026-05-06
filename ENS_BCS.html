@@ -932,6 +932,9 @@ mark {
       <select class="sidebar-select" id="filtroAnio" onchange="buscar()">
         <option value="">Todos los años</option>
       </select>
+      <select class="sidebar-select" id="filtroAsesor" onchange="buscar()">
+        <option value="">Todos los asesores</option>
+      </select>
       <span class="badge-filtros" id="badgeFiltros"></span>
     </div>
   </aside>
@@ -1065,6 +1068,7 @@ function actualizarCascada() {
   llenarSelect("filtroTipo", [...new Set(allDocs.filter(d => (!sede || d["Sede"] === sede) && (!prog || d["Programa de estudio"] === prog)).map(d => d["Tipo de documento"]).filter(Boolean))].sort());
   llenarSelect("filtroEscuela", [...new Set(allDocs.filter(d => (!sede || d["Sede"] === sede) && (!prog || d["Programa de estudio"] === prog) && (!tipo || d["Tipo de documento"] === tipo)).map(d => d["Escuela de práctica"]).filter(Boolean))].sort());
   llenarSelect("filtroAnio", [...new Set(filtrados.map(d => d["Año"]).filter(Boolean))].sort().reverse());
+  llenarSelect("filtroAsesor", [...new Set(filtrados.map(d => d["Asesor (a)"]).filter(Boolean))].sort());
   buscar();
 }
 
@@ -1074,6 +1078,7 @@ function poblarFiltrosInicial(docs) {
   llenarSelect("filtroTipo", [...new Set(docs.map(d => d["Tipo de documento"]).filter(Boolean))].sort());
   llenarSelect("filtroEscuela", [...new Set(docs.map(d => d["Escuela de práctica"]).filter(Boolean))].sort());
   llenarSelect("filtroAnio", [...new Set(docs.map(d => d["Año"]).filter(Boolean))].sort().reverse());
+  llenarSelect("filtroAsesor", [...new Set(docs.map(d => d["Asesor (a)"]).filter(Boolean))].sort());
 }
 
 function poblarSidebar(docs) {
@@ -1127,7 +1132,7 @@ function filtroRapido(tipo, btn) {
 
 function actualizarUI(q, tipo, prog, anio, escuela, sede) {
   document.getElementById("btnLimpiar").style.display = q ? "block" : "none";
-  const n = [tipo, prog, anio, escuela, sede].filter(Boolean).length;
+  const n = [tipo, prog, anio, escuela, sede, asesor].filter(Boolean).length;
   const badge = document.getElementById("badgeFiltros");
   if (n > 0) { badge.style.display = "inline-block"; badge.textContent = `${n} filtro${n>1?"s":""} activo${n>1?"s":""}`; }
   else badge.style.display = "none";
@@ -1135,7 +1140,7 @@ function actualizarUI(q, tipo, prog, anio, escuela, sede) {
 
 function limpiarBusqueda() {
   document.getElementById("searchInput").value = "";
-  ["filtroSede","filtroPrograma","filtroTipo","filtroEscuela","filtroAnio"].forEach(id => document.getElementById(id).value = "");
+  ["filtroSede","filtroPrograma","filtroTipo","filtroEscuela","filtroAnio","filtroAsesor"].forEach(id => document.getElementById(id).value = "");
   filtroRapidoActivo = "";
   document.querySelectorAll(".quick-btn").forEach(b => b.classList.remove("active"));
   document.querySelector(".quick-btn").classList.add("active");
@@ -1229,6 +1234,7 @@ function buscar() {
   const anio = document.getElementById("filtroAnio").value;
   const escuela = document.getElementById("filtroEscuela").value;
   const sede = document.getElementById("filtroSede").value;
+  const asesor = document.getElementById("filtroAsesor").value;
   const orden = document.getElementById("ordenarSelect").value;
 
   actualizarUI(q, tipo, prog, anio, escuela, sede);
@@ -1249,13 +1255,14 @@ function buscar() {
   }
 
   let filtrados = allDocs.filter(d => {
-    const texto = [d["Título"], d["Autor"], d["Escuela de práctica"], d["Plan de estudio"], d["Sede"]].join(" ");
+    const texto = [d["Título"], d["Autor"], d["Escuela de práctica"], d["Plan de estudio"], d["Sede"], d["Asesor (a)"]].join(" ");
     return (!q || coincide(texto, q)) &&
            (!tipo || d["Tipo de documento"] === tipo) &&
            (!prog || d["Programa de estudio"] === prog) &&
            (!anio || d["Año"] === anio) &&
            (!escuela || d["Escuela de práctica"] === escuela) &&
-           (!sede || d["Sede"] === sede);
+           (!sede || d["Sede"] === sede) &&
+           (!asesor || d["Asesor (a)"] === asesor);
   });
 
   if (filtrados.length === 0) {
