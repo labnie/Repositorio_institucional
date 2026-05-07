@@ -719,6 +719,26 @@ mark {
 </head>
 <body>
 
+<!-- MODAL RESUMEN -->
+<div id="modalResumen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:16px; max-width:560px; width:90%; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem; border-bottom:1px solid var(--borde); padding-bottom:1rem;">
+      <div style="width:36px; height:36px; background:#e8f0fe; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">📝</div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:14px; font-weight:600; color:var(--vino);">Resumen</div>
+        <div style="font-size:11px; color:var(--texto-suave); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="resumenTitulo"></div>
+      </div>
+      <button onclick="cerrarResumen()" style="margin-left:auto; background:none; border:none; font-size:18px; cursor:pointer; color:var(--texto-suave); flex-shrink:0;">✕</button>
+    </div>
+    <div style="max-height:320px; overflow-y:auto; padding-right:6px;">
+      <p style="font-size:13.5px; line-height:1.8; color:var(--texto); text-align:justify;" id="resumenTexto"></p>
+    </div>
+    <div style="margin-top:1rem; display:flex; justify-content:flex-end;">
+      <button onclick="cerrarResumen()" style="padding:8px 20px; background:var(--vino); color:white; border:none; border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer;">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL APA -->
 <div id="modalAPA" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
   <div style="background:white; border-radius:16px; max-width:560px; width:90%; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
@@ -1021,6 +1041,18 @@ function generarAPA(d) {
   return `${autor} (${anio}). <em>${titulo}</em> [${tipo}]. ${institucion}.${liga}`;
 }
 
+function mostrarResumen(indice) {
+  const d = allDocs[indice];
+  if (!d) return;
+  document.getElementById("resumenTitulo").textContent = d["Título"] || "Sin título";
+  document.getElementById("resumenTexto").textContent = d["Resumen"];
+  document.getElementById("modalResumen").style.display = "flex";
+}
+
+function cerrarResumen() {
+  document.getElementById("modalResumen").style.display = "none";
+}
+
 function mostrarAPA(indice) {
   const d = allDocs[indice];
   if (!d) return;
@@ -1198,7 +1230,11 @@ function renderTarjetas(docs) {
           ${d["Plan de estudio"] ? `<span class="tag tag-anio">Plan ${d["Plan de estudio"]}</span>` : ""}
         </div>
       </div>
-      ${d["Liga"] ? `<div class="card-actions"><a class="btn-ver" href="${d["Liga"]}" target="_blank">Ver documento</a><button class="btn-ver" style="background:white; color:var(--vino); border:1.5px solid var(--vino); cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarAPA(${allDocs.indexOf(d)})">Referencia APA7</button></div>` : ""}
+      ${d["Liga"] ? `<div class="card-actions">
+        <a class="btn-ver" href="${d["Liga"]}" target="_blank">Ver documento</a>
+        ${d["Resumen"] ? `<button class="btn-ver" style="background:white; color:#1a4a80; border:1.5px solid #1a4a80; cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarResumen(${allDocs.indexOf(d)})">Resumen</button>` : ""}
+        <button class="btn-ver" style="background:white; color:var(--vino); border:1.5px solid var(--vino); cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarAPA(${allDocs.indexOf(d)})">Referencia APA7</button>
+      </div>` : ""}
     </div>`;
   }).join("");
 }
