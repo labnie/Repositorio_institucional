@@ -675,9 +675,10 @@ mark {
     gap: 1rem;
   }
 
-  /* SIDEBARS ocultos en móvil, se muestran con botón */
+  /* SIDEBARS en móvil - el derecho visible por defecto, el izquierdo con botón */
   .sidebar { display: none; }
   .sidebar.visible { display: block; position: static; }
+  .sidebar.filtros-avanzados { display: block; position: static; }
 
   /* BOTÓN FILTROS MÓVIL */
   .btn-filtros-movil {
@@ -916,13 +917,10 @@ mark {
     </button>
     <div class="results-header">
       <div class="results-count" id="resultsHeader"></div>
-      <select class="ordenar-select" id="ordenarSelect" onchange="buscar()" style="display:none;">
-        <option value="relevancia">Relevancia</option>
-        <option value="reciente">Más reciente</option>
-        <option value="antiguo">Más antiguo</option>
-        <option value="az">Título A–Z</option>
-        <option value="za">Título Z–A</option>
-      </select>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <select class="ordenar-select" id="ordenarSelect" onchange="buscar()" style="display:none;"></select>
+        <button id="btnExportar" onclick="exportarExcel()" style="display:none; padding:5px 12px; background:white; border:1px solid var(--borde); border-radius:8px; font-size:12px; font-family:'DM Sans',sans-serif; color:var(--texto-suave); cursor:pointer;">⬇ Exportar</button>
+      </div>
     </div>
     <div id="resultsList">
       <div class="estado">
@@ -934,7 +932,7 @@ mark {
   </div>
 
   <!-- SIDEBAR DERECHO: Filtros avanzados -->
-  <aside class="sidebar">
+  <aside class="sidebar filtros-avanzados">
     <div class="sidebar-section">
       <div class="sidebar-title">Filtros avanzados</div>
       <select class="sidebar-select" id="filtroSede" onchange="actualizarCascada()">
@@ -1197,6 +1195,20 @@ function resaltar(texto, query) {
   return result;
 }
 
+function exportarExcel() {
+  if (!resultadosActuales.length) return;
+  const encabezados = ["Título", "Autor", "Tipo de documento", "Programa de estudio", "Año", "Sede", "Escuela de práctica", "Asesor (a)", "Liga"];
+  const filas = resultadosActuales.map(d => encabezados.map(h => `"${(d[h] || "").replace(/"/g, '""')}"`).join(","));
+  const csv = [encabezados.join(","), ...filas].join("\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Repositorio_ENS_BCS.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function ordenarResultados(docs, criterio) {
   const copia = [...docs];
   switch (criterio) {
@@ -1223,6 +1235,7 @@ function renderTarjetas(docs) {
           ${d["Año"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Año"]}</span>` : ""}
           ${d["Sede"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Sede"]}</span>` : ""}
           ${d["Escuela de práctica"] ? `<span class="card-meta-item"><span class="dot"></span>${d["Escuela de práctica"]}</span>` : ""}
+          ${d["Asesor (a)"] ? `<span class="card-meta-item"><span class="dot"></span>Asesor(a): ${d["Asesor (a)"]}</span>` : ""}
         </div>
         <div class="card-tags">
           ${d["Tipo de documento"] ? `<span class="tag tag-tipo">${d["Tipo de documento"]}</span>` : ""}
@@ -1305,12 +1318,21 @@ function buscar() {
     header.innerHTML = "";
     pag.innerHTML = "";
     ordenarSelect.style.display = "none";
+    document.getElementById("btnExportar").style.display = "none";
     list.innerHTML = `<div class="estado"><div class="estado-icono">🔍</div><p>No encontramos documentos con esos términos.<br>Intenta con sinónimos, menos filtros, o verifica la ortografía.</p></div>`;
     return;
   }
 
   resultadosActuales = ordenarResultados(filtrados, orden);
   ordenarSelect.style.display = "block";
+  ordenarSelect.innerHTML = `
+    <option value="relevancia">Relevancia</option>
+    <option value="reciente">Más reciente</option>
+    <option value="antiguo">Más antiguo</option>
+    <option value="az">Título A–Z</option>
+    <option value="za">Título Z–A</option>
+  `;
+  document.getElementById("btnExportar").style.display = "block";
 
   const total = resultadosActuales.length;
   header.innerHTML = `<div class="results-count">Mostrando <span>${total} documento${total !== 1 ? "s" : ""}</span></div>`;
