@@ -1236,13 +1236,7 @@ async function enviarSolicitud() {
   const url = "https://script.google.com/macros/s/AKfycbz94qrXKOrz906F6lUloSwNZwNDD_HwZUwiJn3VINOVIh1J_NLcdkR7cY05yl7EbjQ/exec?" + params.toString();
 
   try {
-    const iframe = document.createElement("iframe");
-    iframe.style.display = "none";
-    iframe.src = url;
-    iframe.onload = () => { document.body.removeChild(iframe); };
-    iframe.onerror = () => { document.body.removeChild(iframe); };
-    document.body.appendChild(iframe);
-    setTimeout(() => { if (document.body.contains(iframe)) document.body.removeChild(iframe); }, 5000);
+    await fetch(url, { method: "GET", mode: "no-cors" });
 
     if (window.enviarSolicitudFirebase) {
       await window.enviarSolicitudFirebase({ nombre, institucion, correo, motivo, titulo, autor, anio, programa });
