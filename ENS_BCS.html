@@ -1251,6 +1251,8 @@ async function enviarSolicitud() {
       document.querySelectorAll('.card').forEach(c => c.classList.remove('seleccionada'));
     }
 
+    btnEnviar.textContent = "Enviar solicitud";
+    btnEnviar.disabled = false;
     cerrarSolicitud();
     alert("✅ Tu solicitud fue enviada correctamente. Nos pondremos en contacto contigo a la brevedad.");
   } catch(e) {
