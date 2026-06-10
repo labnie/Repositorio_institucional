@@ -479,7 +479,47 @@ mark {
   align-items: flex-start;
 }
 
-@keyframes fadeIn {
+.card.seleccionada {
+  border-left-color: var(--vino);
+  background: #fdf5f6;
+}
+
+.card-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--vino);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.btn-solicitud-masiva {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--vino);
+  color: white;
+  border: none;
+  border-radius: 99px;
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(107,26,42,0.4);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.btn-solicitud-masiva:hover {
+  background: var(--vino-claro);
+  transform: translateX(-50%) translateY(-2px);
+}
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
@@ -750,6 +790,11 @@ mark {
 </head>
 <body>
 
+<!-- BOTÓN FLOTANTE SOLICITUD MASIVA -->
+<button class="btn-solicitud-masiva" id="btnSolicitudMasiva" onclick="mostrarSolicitudMasiva()">
+  📩 Solicitar documentos seleccionados (<span id="contadorSeleccion">0</span>)
+</button>
+
 <!-- MODAL SOLICITUD -->
 <div id="modalSolicitud" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
   <div style="background:white; border-radius:16px; max-width:520px; width:90%; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
@@ -761,8 +806,8 @@ mark {
       </div>
       <button onclick="cerrarSolicitud()" style="margin-left:auto; background:none; border:none; font-size:18px; cursor:pointer; color:var(--texto-suave);">✕</button>
     </div>
-    <div style="background:#f5f9f6; border:1px solid #c8e6c9; border-radius:10px; padding:10px 14px; margin-bottom:1rem;">
-      <div style="font-size:11px; color:#555; margin-bottom:2px;">Documento solicitado:</div>
+    <div style="background:#f5f9f6; border:1px solid #c8e6c9; border-radius:10px; padding:10px 14px; margin-bottom:1rem; max-height:120px; overflow-y:auto;">
+      <div style="font-size:11px; color:#555; margin-bottom:4px;">Documento(s) solicitado(s):</div>
       <div style="font-size:13px; font-weight:500; color:var(--texto);" id="solicitudTitulo"></div>
     </div>
     <div style="display:flex; flex-direction:column; gap:10px;">
@@ -1107,12 +1152,49 @@ function generarAPA(d) {
   return `${autor} (${anio}). <em>${titulo}</em> [${tipo}]. ${institucion}.${liga}`;
 }
 
+let docsSeleccionados = new Set();
+
+function toggleSeleccion(indice, checkbox) {
+  const card = checkbox.closest('.card');
+  if (checkbox.checked) {
+    docsSeleccionados.add(indice);
+    card.classList.add('seleccionada');
+  } else {
+    docsSeleccionados.delete(indice);
+    card.classList.remove('seleccionada');
+  }
+  actualizarBotonMasivo();
+}
+
+function actualizarBotonMasivo() {
+  const btn = document.getElementById("btnSolicitudMasiva");
+  const contador = document.getElementById("contadorSeleccion");
+  const n = docsSeleccionados.size;
+  contador.textContent = n;
+  btn.style.display = n > 0 ? "flex" : "none";
+}
+
+function mostrarSolicitudMasiva() {
+  const docs = [...docsSeleccionados].map(i => allDocs[i]).filter(Boolean);
+  if (docs.length === 0) return;
+  docSolicitado = docs;
+  const listado = docs.map((d, i) => `${i+1}. ${d["Título"] || "Sin título"} — ${d["Autor"] || ""} (${d["Año"] || ""})`).join("\n");
+  document.getElementById("solicitudTitulo").innerHTML = docs.map((d, i) =>
+    `<div style="padding:2px 0; border-bottom:1px solid #e0f0e5; font-size:12px;">${i+1}. ${d["Título"] || "Sin título"}</div>`
+  ).join("");
+  document.getElementById("solicitudNombre").value = "";
+  document.getElementById("solicitudInstitucion").value = "";
+  document.getElementById("solicitudCorreo").value = "";
+  document.getElementById("solicitudMotivo").value = "";
+  document.getElementById("modalSolicitud").style.display = "flex";
+}
+
 let docSolicitado = null;
 
 function mostrarSolicitud(indice) {
   docSolicitado = allDocs[indice];
   if (!docSolicitado) return;
-  document.getElementById("solicitudTitulo").textContent = docSolicitado["Título"] || "Sin título";
+  document.getElementById("solicitudTitulo").innerHTML = `<div style="font-size:13px;">${docSolicitado["Título"] || "Sin título"}</div>`;
   document.getElementById("solicitudNombre").value = "";
   document.getElementById("solicitudInstitucion").value = "";
   document.getElementById("solicitudCorreo").value = "";
@@ -1136,10 +1218,13 @@ async function enviarSolicitud() {
     return;
   }
 
-  const titulo = docSolicitado ? (docSolicitado["Título"] || "Sin título") : "";
-  const autor = docSolicitado ? (docSolicitado["Autor"] || "") : "";
-  const anio = docSolicitado ? (docSolicitado["Año"] || "") : "";
-  const programa = docSolicitado ? (docSolicitado["Programa de estudio"] || "") : "";
+  // Determinar si es uno o varios documentos
+  const esMasivo = Array.isArray(docSolicitado);
+  const docs = esMasivo ? docSolicitado : [docSolicitado];
+  const titulo = docs.map((d, i) => `${i+1}. ${d["Título"] || "Sin título"} — ${d["Autor"] || ""} (${d["Año"] || ""})`).join(" | ");
+  const autor = esMasivo ? `${docs.length} documentos seleccionados` : (docs[0]["Autor"] || "");
+  const anio = esMasivo ? "" : (docs[0]["Año"] || "");
+  const programa = esMasivo ? "" : (docs[0]["Programa de estudio"] || "");
 
   const btnEnviar = document.getElementById("btnEnviarSolicitud");
   btnEnviar.textContent = "Enviando...";
@@ -1155,13 +1240,18 @@ async function enviarSolicitud() {
     iframe.onload = () => { document.body.removeChild(iframe); };
     iframe.onerror = () => { document.body.removeChild(iframe); };
     document.body.appendChild(iframe);
-    setTimeout(() => {
-      if (document.body.contains(iframe)) document.body.removeChild(iframe);
-    }, 5000);
+    setTimeout(() => { if (document.body.contains(iframe)) document.body.removeChild(iframe); }, 5000);
 
-    // También guardar en Firebase
     if (window.enviarSolicitudFirebase) {
       await window.enviarSolicitudFirebase({ nombre, institucion, correo, motivo, titulo, autor, anio, programa });
+    }
+
+    // Limpiar selección si fue masivo
+    if (esMasivo) {
+      docsSeleccionados.clear();
+      actualizarBotonMasivo();
+      document.querySelectorAll('.card-checkbox').forEach(cb => { cb.checked = false; });
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('seleccionada'));
     }
 
     cerrarSolicitud();
@@ -1347,6 +1437,7 @@ function renderTarjetas(docs) {
     const titulo = resaltar(d["Título"] || "Sin título", q);
     return `
     <div class="card" style="animation-delay:${Math.min(i*0.04,0.3)}s">
+      <input type="checkbox" class="card-checkbox" onclick="toggleSeleccion(${allDocs.indexOf(d)}, this)" title="Seleccionar documento">
       <div class="card-icon ${icono.clase}">${icono.sigla}</div>
       <div class="card-body">
         <div class="card-titulo">${titulo}</div>
@@ -1408,6 +1499,9 @@ function buscar() {
   const orden = document.getElementById("ordenarSelect").value;
 
   actualizarUI(q, tipo, prog, anio, escuela, sede, asesor);
+
+  docsSeleccionados.clear();
+  actualizarBotonMasivo();
 
   const header = document.getElementById("resultsHeader");
   const list = document.getElementById("resultsList");
