@@ -1222,7 +1222,7 @@ async function enviarSolicitud() {
   const esMasivo = Array.isArray(docSolicitado);
   const docs = esMasivo ? docSolicitado : [docSolicitado];
   const titulo = esMasivo 
-    ? docs.map((d, i) => `${i+1}. ${d["Título"] || "Sin título"}`).join(" | ").substring(0, 800)
+    ? docs.map((d, i) => `${i+1}. ${d["Título"] || "Sin título"} — ${d["Autor"] || ""} — ${d["Programa de estudio"] || ""} — ${d["Sede"] || ""} — ${d["Año"] || ""}`).join(" | ").substring(0, 1500)
     : (docs[0]["Título"] || "Sin título");
   const autor = esMasivo ? `${docs.length} documentos seleccionados` : (docs[0]["Autor"] || "");
   const anio = esMasivo ? "" : (docs[0]["Año"] || "");
