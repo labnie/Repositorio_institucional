@@ -19,6 +19,36 @@
 <meta name="twitter:description" content="Accede a los documentos recepcionales de egresados normalistas de la Escuela Normal Superior del Estado de Baja California Sur.">
 <meta name="twitter:image" content="https://labnie.github.io/Repositorio_institucional/Caratula_repositorio.png">
 <!-- Favicon -->
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCtuhWiF9GPsgtaNS11P5KhzNMMop6uxX0",
+    authDomain: "repositens.firebaseapp.com",
+    projectId: "repositens",
+    storageBucket: "repositens.firebasestorage.app",
+    messagingSenderId: "810638250403",
+    appId: "1:810638250403:web:a709e5dda5c442ebf48a16"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.enviarSolicitudFirebase = async function(datos) {
+    try {
+      await addDoc(collection(db, "solicitudes"), {
+        ...datos,
+        timestamp: serverTimestamp()
+      });
+      return true;
+    } catch (e) {
+      console.error("Error al guardar solicitud:", e);
+      return false;
+    }
+  };
+</script>
 <link rel="icon" type="image/png" href="https://labnie.github.io/Repositorio_institucional/logotipo-ens.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1097,7 +1127,7 @@ function cerrarSolicitud() {
   docSolicitado = null;
 }
 
-function enviarSolicitud() {
+async function enviarSolicitud() {
   const nombre = document.getElementById("solicitudNombre").value.trim();
   const institucion = document.getElementById("solicitudInstitucion").value.trim();
   const correo = document.getElementById("solicitudCorreo").value.trim();
@@ -1111,24 +1141,23 @@ function enviarSolicitud() {
   const titulo = docSolicitado ? (docSolicitado["Título"] || "Sin título") : "";
   const autor = docSolicitado ? (docSolicitado["Autor"] || "") : "";
   const anio = docSolicitado ? (docSolicitado["Año"] || "") : "";
+  const programa = docSolicitado ? (docSolicitado["Programa de estudio"] || "") : "";
 
-  const asunto = encodeURIComponent(`Solicitud de documento recepcional — ${titulo}`);
-  const cuerpo = encodeURIComponent(
-    `Estimado(a) responsable del Repositorio Institucional ENS-BCS:\n\n` +
-    `Por medio del presente, solicito respetuosamente el acceso al siguiente documento recepcional:\n\n` +
-    `Título: ${titulo}\n` +
-    `Autor: ${autor}\n` +
-    `Año: ${anio}\n\n` +
-    `Mis datos:\n` +
-    `Nombre: ${nombre}\n` +
-    `Institución: ${institucion}\n` +
-    `Correo: ${correo}\n\n` +
-    `Motivo de la solicitud:\n${motivo}\n\n` +
-    `Atentamente,\n${nombre}`
-  );
+  const btnEnviar = document.querySelector("#modalSolicitud button[onclick='enviarSolicitud()']");
+  btnEnviar.textContent = "Enviando...";
+  btnEnviar.disabled = true;
 
-  window.location.href = `mailto:tpineda.labnie@normales.mx?subject=${asunto}&body=${cuerpo}`;
-  cerrarSolicitud();
+  const datos = { nombre, institucion, correo, motivo, titulo, autor, anio, programa };
+  const exito = await window.enviarSolicitudFirebase(datos);
+
+  if (exito) {
+    cerrarSolicitud();
+    alert("✅ Tu solicitud fue enviada correctamente. Nos pondremos en contacto contigo en breve.");
+  } else {
+    btnEnviar.textContent = "Enviar solicitud";
+    btnEnviar.disabled = false;
+    alert("Hubo un error al enviar la solicitud. Intenta de nuevo.");
+  }
 }
 
 function mostrarResumen(indice) {
