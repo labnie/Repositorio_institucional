@@ -1227,12 +1227,13 @@ async function enviarSolicitud() {
   const autor = esMasivo ? `${docs.length} documentos seleccionados` : (docs[0]["Autor"] || "");
   const anio = esMasivo ? "" : (docs[0]["Año"] || "");
   const programa = esMasivo ? "" : (docs[0]["Programa de estudio"] || "");
+  const sede = esMasivo ? "" : (docs[0]["Sede"] || "");
 
   const btnEnviar = document.getElementById("btnEnviarSolicitud");
   btnEnviar.textContent = "Enviando...";
   btnEnviar.disabled = true;
 
-  const params = new URLSearchParams({ nombre, institucion, correo, motivo, titulo, autor, anio, programa });
+  const params = new URLSearchParams({ nombre, institucion, correo, motivo, titulo, autor, anio, programa, sede });
   const url = "https://script.google.com/macros/s/AKfycbz94qrXKOrz906F6lUloSwNZwNDD_HwZUwiJn3VINOVIh1J_NLcdkR7cY05yl7EbjQ/exec?" + params.toString();
 
   try {
