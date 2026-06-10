@@ -1221,7 +1221,9 @@ async function enviarSolicitud() {
   // Determinar si es uno o varios documentos
   const esMasivo = Array.isArray(docSolicitado);
   const docs = esMasivo ? docSolicitado : [docSolicitado];
-  const titulo = docs.map((d, i) => `${i+1}. ${d["Título"] || "Sin título"} — ${d["Autor"] || ""} (${d["Año"] || ""})`).join(" | ");
+  const titulo = esMasivo 
+    ? docs.map((d, i) => `${i+1}. ${d["Título"] || "Sin título"}`).join(" | ").substring(0, 800)
+    : (docs[0]["Título"] || "Sin título");
   const autor = esMasivo ? `${docs.length} documentos seleccionados` : (docs[0]["Autor"] || "");
   const anio = esMasivo ? "" : (docs[0]["Año"] || "");
   const programa = esMasivo ? "" : (docs[0]["Programa de estudio"] || "");
@@ -1455,7 +1457,6 @@ function renderTarjetas(docs) {
         </div>
       </div>
       ${d["Liga"] ? `<div class="card-actions">
-        <a class="btn-ver" href="${d["Liga"]}" target="_blank">Ver documento</a>
         ${d["Resumen"] ? `<button class="btn-ver" style="background:white; color:#1a4a80; border:1.5px solid #1a4a80; cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarResumen(${allDocs.indexOf(d)})">Resumen</button>` : ""}
         <button class="btn-ver" style="background:white; color:#1a6b3a; border:1.5px solid #1a6b3a; cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarSolicitud(${allDocs.indexOf(d)})">Solicitar documento</button>
         <button class="btn-ver" style="background:white; color:var(--vino); border:1.5px solid var(--vino); cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarAPA(${allDocs.indexOf(d)})">Referencia APA7</button>
