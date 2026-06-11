@@ -118,6 +118,23 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
 }
 .barra-relleno.cero { background: #d8cfc8; color: var(--texto-suave); }
 
+/* TOGGLE DE VISTA */
+.vista-toggle { display: flex; gap: 6px; margin-bottom: 1rem; }
+.vista-btn {
+  padding: 5px 14px; border: 1px solid var(--borde); background: white;
+  border-radius: 99px; font-size: 12px; font-family: 'DM Sans', sans-serif;
+  color: var(--texto-suave); cursor: pointer; transition: all 0.2s;
+}
+.vista-btn.activo { background: var(--vino); border-color: var(--vino); color: white; font-weight: 600; }
+.vista-btn:hover:not(.activo) { border-color: var(--vino); color: var(--vino); }
+
+/* LEYENDA PARA PASTEL */
+.leyenda { display: flex; flex-direction: column; gap: 7px; margin-top: 1rem; }
+.leyenda-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--texto); }
+.leyenda-color { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+.leyenda-valor { margin-left: auto; font-weight: 600; color: var(--texto-suave); }
+.pastel-wrap { display: flex; flex-direction: column; align-items: center; }
+
 /* TABLA */
 .tabla-datos { width: 100%; border-collapse: collapse; font-size: 13px; }
 .tabla-datos th { background: var(--vino); color: white; text-align: left; padding: 8px 12px; font-weight: 500; font-size: 12px; }
@@ -234,6 +251,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
     <div class="panel">
       <div class="panel-titulo" id="graficaTitulo">Documentos por año</div>
       <div class="panel-sub" id="graficaSub"></div>
+      <div class="vista-toggle">
+        <button class="vista-btn activo" id="btnBarras" onclick="cambiarVista('barras')">📊 Barras</button>
+        <button class="vista-btn" id="btnPastel" onclick="cambiarVista('pastel')">🥧 Pastel</button>
+      </div>
       <div id="grafica">
         <div class="estado"><div class="estado-icono">⏳</div><p>Cargando datos…</p></div>
       </div>
@@ -314,11 +335,66 @@ function aplicarFiltros() {
   );
 }
 
+let vistaActual = "barras";
+
+// Paleta de colores vivos y variados
+const PALETA = [
+  "#6b1a2a", "#c9a84c", "#1a6b3a", "#1a4a80", "#b5651d",
+  "#7a3b8f", "#c14b4b", "#2a8a8a", "#d4892b", "#5a7a2a",
+  "#8c2a5e", "#3a5fa0", "#a85c2a", "#4a8a4a", "#a03a6b",
+  "#5b7a8c", "#9a6a1a", "#6a4a8a", "#bf6030", "#2a6a5a"
+];
+
+function color(i) { return PALETA[i % PALETA.length]; }
+
+function cambiarVista(v) {
+  vistaActual = v;
+  document.getElementById("btnBarras").classList.toggle("activo", v === "barras");
+  document.getElementById("btnPastel").classList.toggle("activo", v === "pastel");
+  render();
+}
+
+function dibujarDona(entradas, total) {
+  const size = 220, radio = 90, grosor = 38, cx = size/2, cy = size/2;
+  let acumulado = 0;
+  const segmentos = entradas.map(([etq, val], i) => {
+    const fraccion = total > 0 ? val / total : 0;
+    const inicio = acumulado * 2 * Math.PI - Math.PI/2;
+    acumulado += fraccion;
+    const fin = acumulado * 2 * Math.PI - Math.PI/2;
+    const x1 = cx + radio * Math.cos(inicio), y1 = cy + radio * Math.sin(inicio);
+    const x2 = cx + radio * Math.cos(fin), y2 = cy + radio * Math.sin(fin);
+    const largo = fin - inicio > Math.PI ? 1 : 0;
+    if (fraccion === 0) return "";
+    if (fraccion >= 0.9999) {
+      // Círculo completo
+      return `<circle cx="${cx}" cy="${cy}" r="${radio}" fill="none" stroke="${color(i)}" stroke-width="${grosor}"/>`;
+    }
+    return `<path d="M ${x1} ${y1} A ${radio} ${radio} 0 ${largo} 1 ${x2} ${y2}" fill="none" stroke="${color(i)}" stroke-width="${grosor}" stroke-linecap="butt"/>`;
+  }).join("");
+
+  return `
+    <div class="pastel-wrap">
+      <svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">
+        ${segmentos}
+        <text x="${cx}" y="${cy-6}" text-anchor="middle" font-family="Playfair Display, serif" font-size="28" font-weight="600" fill="#6b1a2a">${total}</text>
+        <text x="${cx}" y="${cy+14}" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="11" fill="#5a5a5a">documentos</text>
+      </svg>
+      <div class="leyenda">
+        ${entradas.map(([etq, val], i) => `
+          <div class="leyenda-item">
+            <span class="leyenda-color" style="background:${color(i)}"></span>
+            <span>${etq}</span>
+            <span class="leyenda-valor">${val} (${total > 0 ? Math.round(val/total*100) : 0}%)</span>
+          </div>`).join("")}
+      </div>
+    </div>`;
+}
+
 function render() {
   const eje = document.getElementById("ejePrincipal").value;
   const docs = aplicarFiltros();
 
-  // Agrupar
   const conteo = {};
   docs.forEach(d => {
     const clave = d[eje] || "(sin dato)";
@@ -326,14 +402,12 @@ function render() {
   });
 
   let entradas = Object.entries(conteo);
-  // Ordenar: por año descendente; el resto por cantidad descendente
   if (eje === "Año") {
     entradas.sort((a,b) => b[0].localeCompare(a[0]));
   } else {
     entradas.sort((a,b) => b[1] - a[1]);
   }
 
-  // Título y subtítulo
   document.getElementById("graficaTitulo").textContent = "Documentos por " + eje.toLowerCase();
   const filtrosActivos = ["fSede","fAnio","fTipo","fPrograma"]
     .map(id => document.getElementById(id).value).filter(Boolean);
@@ -350,27 +424,30 @@ function render() {
     return;
   }
 
+  const total = entradas.reduce((s, e) => s + e[1], 0);
   const maxVal = Math.max(...entradas.map(e => e[1]));
 
-  // Gráfica de barras
-  grafica.innerHTML = entradas.map(([etq, val]) => {
-    const pct = maxVal > 0 ? (val / maxVal * 100) : 0;
-    return `
-      <div class="barra-fila">
-        <div class="barra-etiqueta">${etq}</div>
-        <div class="barra-track">
-          <div class="barra-relleno ${val === 0 ? "cero" : ""}" style="width:${Math.max(pct, 4)}%">${val}</div>
-        </div>
-      </div>`;
-  }).join("");
+  if (vistaActual === "barras") {
+    grafica.innerHTML = entradas.map(([etq, val], i) => {
+      const pct = maxVal > 0 ? (val / maxVal * 100) : 0;
+      return `
+        <div class="barra-fila">
+          <div class="barra-etiqueta">${etq}</div>
+          <div class="barra-track">
+            <div class="barra-relleno ${val === 0 ? "cero" : ""}" style="width:${Math.max(pct, 4)}%; background:${val === 0 ? "" : color(i)}">${val}</div>
+          </div>
+        </div>`;
+    }).join("");
+  } else {
+    grafica.innerHTML = dibujarDona(entradas, total);
+  }
 
-  // Tabla
-  const total = entradas.reduce((s, e) => s + e[1], 0);
+  // Tabla con indicador de color
   tablaWrap.innerHTML = `
     <table class="tabla-datos">
       <thead><tr><th>${eje}</th><th>Documentos</th></tr></thead>
       <tbody>
-        ${entradas.map(([etq, val]) => `<tr><td>${etq}</td><td>${val}</td></tr>`).join("")}
+        ${entradas.map(([etq, val], i) => `<tr><td><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${color(i)};margin-right:7px;"></span>${etq}</td><td>${val}</td></tr>`).join("")}
         <tr class="tabla-total"><td>Total</td><td>${total}</td></tr>
       </tbody>
     </table>`;
