@@ -93,6 +93,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
 }
 .control-grupo select:focus { border-color: var(--vino); }
 .filtros-titulo { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--texto-tenue); margin: 1.25rem 0 0.75rem; }
+.filtros-chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+.chip-grupo label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--dorado); margin-bottom: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  padding: 4px 12px; border: 1px solid var(--borde); background: var(--crema);
+  border-radius: 99px; font-size: 12px; font-family: 'DM Sans', sans-serif;
+  color: var(--texto-suave); cursor: pointer; transition: all 0.15s; user-select: none;
+}
+.chip:hover:not(.activo) { border-color: var(--vino-claro); color: var(--vino); }
+.chip.activo { background: var(--vino); border-color: var(--vino); color: white; font-weight: 600; }
 .btn-limpiar-filtros {
   margin-top: 1rem; padding: 7px 16px; background: white; color: var(--vino);
   border: 1px solid var(--vino); border-radius: 8px; font-size: 12px; font-family: 'DM Sans', sans-serif;
@@ -224,23 +234,23 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
       </div>
     </div>
 
-    <div class="filtros-titulo">Acotar resultados (opcional)</div>
-    <div class="controles-grid">
-      <div class="control-grupo">
+    <div class="filtros-titulo">Acotar resultados (toca para seleccionar; sin selección = todos)</div>
+    <div class="filtros-chips">
+      <div class="chip-grupo">
         <label>Sede</label>
-        <select id="fSede" onchange="render()"><option value="">Todas</option></select>
+        <div class="chips" id="fSede"></div>
       </div>
-      <div class="control-grupo">
+      <div class="chip-grupo">
         <label>Año</label>
-        <select id="fAnio" onchange="render()"><option value="">Todos</option></select>
+        <div class="chips" id="fAnio"></div>
       </div>
-      <div class="control-grupo">
+      <div class="chip-grupo">
         <label>Tipo de documento</label>
-        <select id="fTipo" onchange="render()"><option value="">Todos</option></select>
+        <div class="chips" id="fTipo"></div>
       </div>
-      <div class="control-grupo">
+      <div class="chip-grupo">
         <label>Programa de estudio</label>
-        <select id="fPrograma" onchange="render()"><option value="">Todos</option></select>
+        <div class="chips" id="fPrograma"></div>
       </div>
     </div>
     <button class="btn-limpiar-filtros" onclick="limpiarFiltros()">Limpiar filtros</button>
@@ -304,35 +314,58 @@ function parseCSV(text) {
   });
 }
 
+// Estado de filtros: cada uno es un Set de valores activos (vacío = todos)
+const filtrosActivos = {
+  "fSede": new Set(),
+  "fAnio": new Set(),
+  "fTipo": new Set(),
+  "fPrograma": new Set()
+};
+const campoDeFiltro = {
+  "fSede": "Sede",
+  "fAnio": "Año",
+  "fTipo": "Tipo de documento",
+  "fPrograma": "Programa de estudio"
+};
+
 function llenarFiltro(id, campo) {
-  const sel = document.getElementById(id);
+  const cont = document.getElementById(id);
   const valores = [...new Set(allDocs.map(d => d[campo]).filter(Boolean))].sort((a,b) => {
     if (campo === "Año") return b.localeCompare(a);
     return a.localeCompare(b, "es");
   });
-  valores.forEach(v => {
-    const o = document.createElement("option");
-    o.value = v; o.textContent = v;
-    sel.appendChild(o);
-  });
+  cont.innerHTML = valores.map(v =>
+    `<span class="chip" data-valor="${v.replace(/"/g, '&quot;')}" onclick="toggleChip('${id}', this)">${v}</span>`
+  ).join("");
+}
+
+function toggleChip(id, el) {
+  const valor = el.getAttribute("data-valor");
+  const set = filtrosActivos[id];
+  if (set.has(valor)) {
+    set.delete(valor);
+    el.classList.remove("activo");
+  } else {
+    set.add(valor);
+    el.classList.add("activo");
+  }
+  render();
 }
 
 function limpiarFiltros() {
-  ["fSede","fAnio","fTipo","fPrograma"].forEach(id => document.getElementById(id).value = "");
+  Object.values(filtrosActivos).forEach(set => set.clear());
+  document.querySelectorAll(".chip.activo").forEach(c => c.classList.remove("activo"));
   render();
 }
 
 function aplicarFiltros() {
-  const sede = document.getElementById("fSede").value;
-  const anio = document.getElementById("fAnio").value;
-  const tipo = document.getElementById("fTipo").value;
-  const prog = document.getElementById("fPrograma").value;
-  return allDocs.filter(d =>
-    (!sede || d["Sede"] === sede) &&
-    (!anio || d["Año"] === anio) &&
-    (!tipo || d["Tipo de documento"] === tipo) &&
-    (!prog || d["Programa de estudio"] === prog)
-  );
+  return allDocs.filter(d => {
+    return Object.keys(filtrosActivos).every(id => {
+      const set = filtrosActivos[id];
+      if (set.size === 0) return true; // sin selección = todos
+      return set.has(d[campoDeFiltro[id]]);
+    });
+  });
 }
 
 let vistaActual = "barras";
@@ -409,11 +442,12 @@ function render() {
   }
 
   document.getElementById("graficaTitulo").textContent = "Documentos por " + eje.toLowerCase();
-  const filtrosActivos = ["fSede","fAnio","fTipo","fPrograma"]
-    .map(id => document.getElementById(id).value).filter(Boolean);
+  const resumenFiltros = Object.keys(filtrosActivos)
+    .filter(id => filtrosActivos[id].size > 0)
+    .map(id => `${campoDeFiltro[id]}: ${[...filtrosActivos[id]].join(", ")}`);
   document.getElementById("graficaSub").textContent =
     `${docs.length} documento${docs.length !== 1 ? "s" : ""}` +
-    (filtrosActivos.length ? ` · filtrado por: ${filtrosActivos.join(", ")}` : " · sin filtros");
+    (resumenFiltros.length ? ` · ${resumenFiltros.join(" · ")}` : " · sin filtros");
 
   const grafica = document.getElementById("grafica");
   const tablaWrap = document.getElementById("tablaWrap");
