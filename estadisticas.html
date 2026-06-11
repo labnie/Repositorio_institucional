@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estadísticas — Repositorio ENS-BCS</title>
+<link rel="icon" type="image/png" href="https://labnie.github.io/Repositorio_institucional/logotipo-ens.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --vino: #6b1a2a;
+  --vino-oscuro: #4a0f1c;
+  --vino-claro: #8c2a3e;
+  --dorado: #c9a84c;
+  --dorado-claro: #f0d98a;
+  --crema: #f7f2ee;
+  --blanco: #ffffff;
+  --texto: #1c1c1c;
+  --texto-suave: #5a5a5a;
+  --texto-tenue: #9a9a9a;
+  --borde: #e0d8d0;
+  --sidebar: #faf7f4;
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(--texto); min-height: 100vh; }
+
+/* NAVBAR */
+.navbar {
+  background: var(--vino-oscuro);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.navbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: 2rem; }
+.navbar-logo { height: 38px; width: auto; object-fit: contain; }
+.navbar-title { color: white; line-height: 1.2; }
+.navbar-title strong { display: block; font-size: 13px; font-weight: 600; color: var(--dorado); }
+.navbar-title small { font-size: 10px; opacity: 0.7; font-weight: 300; }
+.navbar-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.15); margin: 0 1.5rem; }
+.navbar-menu { display: flex; gap: 0.25rem; flex: 1; }
+.navbar-menu a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 13px; font-weight: 400; padding: 6px 14px; border-radius: 6px; transition: background 0.2s, color 0.2s; }
+.navbar-menu a:hover, .navbar-menu a.active { background: rgba(255,255,255,0.12); color: white; }
+.navbar-menu a.observatorio { color: var(--dorado); }
+.navbar-menu a.observatorio:hover { background: rgba(201,168,76,0.15); color: var(--dorado-claro); }
+.btn-hamburguesa { display: none; align-items: center; justify-content: center; background: none; border: none; color: white; font-size: 22px; cursor: pointer; margin-left: auto; padding: 8px; }
+
+/* HERO */
+.hero {
+  background: var(--vino);
+  background-image: linear-gradient(135deg, var(--vino-oscuro) 0%, var(--vino) 60%, var(--vino-claro) 100%);
+  color: white;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 280px; height: 280px; border-radius: 50%; background: rgba(201,168,76,0.08); }
+.hero-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(20px, 3vw, 28px); font-weight: 500; margin-bottom: 4px; }
+.hero-sub { font-size: 13px; opacity: 0.7; font-weight: 300; }
+
+/* CONTENEDOR */
+.contenedor { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; }
+
+/* RESUMEN SUPERIOR */
+.resumen-cards { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.resumen-card {
+  flex: 1; min-width: 160px;
+  background: white; border: 1px solid var(--borde); border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+.resumen-num { font-size: 26px; font-weight: 600; color: var(--vino); font-family: 'Playfair Display', serif; }
+.resumen-label { font-size: 12px; color: var(--texto-suave); margin-top: 2px; }
+
+/* PANEL DE CONTROLES */
+.controles {
+  background: white; border: 1px solid var(--borde); border-radius: 12px;
+  padding: 1.25rem; margin-bottom: 1.5rem;
+}
+.controles-titulo { font-size: 13px; font-weight: 600; color: var(--vino); margin-bottom: 1rem; }
+.controles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+.control-grupo label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--dorado); margin-bottom: 5px; }
+.control-grupo select {
+  width: 100%; padding: 9px 12px; border: 1px solid var(--borde); border-radius: 8px;
+  font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--texto); background: var(--crema);
+  cursor: pointer; outline: none;
+}
+.control-grupo select:focus { border-color: var(--vino); }
+.filtros-titulo { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--texto-tenue); margin: 1.25rem 0 0.75rem; }
+.btn-limpiar-filtros {
+  margin-top: 1rem; padding: 7px 16px; background: white; color: var(--vino);
+  border: 1px solid var(--vino); border-radius: 8px; font-size: 12px; font-family: 'DM Sans', sans-serif;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-limpiar-filtros:hover { background: var(--vino); color: white; }
+
+/* RESULTADO */
+.resultado-wrap { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1.5rem; align-items: start; }
+.panel { background: white; border: 1px solid var(--borde); border-radius: 12px; padding: 1.25rem; }
+.panel-titulo { font-size: 14px; font-weight: 600; color: var(--texto); margin-bottom: 0.25rem; }
+.panel-sub { font-size: 12px; color: var(--texto-suave); margin-bottom: 1rem; }
+
+/* GRÁFICA DE BARRAS (SVG-free, divs) */
+.barra-fila { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.barra-etiqueta { width: 130px; font-size: 12px; color: var(--texto-suave); text-align: right; flex-shrink: 0; line-height: 1.3; }
+.barra-track { flex: 1; background: #f0e8e2; border-radius: 6px; height: 26px; position: relative; overflow: hidden; }
+.barra-relleno {
+  height: 100%; background: var(--vino); border-radius: 6px;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 8px; color: white; font-size: 12px; font-weight: 600;
+  min-width: 28px; transition: width 0.5s ease;
+}
+.barra-relleno.cero { background: #d8cfc8; color: var(--texto-suave); }
+
+/* TABLA */
+.tabla-datos { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tabla-datos th { background: var(--vino); color: white; text-align: left; padding: 8px 12px; font-weight: 500; font-size: 12px; }
+.tabla-datos th:last-child { text-align: right; }
+.tabla-datos td { padding: 7px 12px; border-bottom: 1px solid var(--borde); }
+.tabla-datos td:last-child { text-align: right; font-weight: 600; color: var(--vino); }
+.tabla-datos tr:last-child td { border-bottom: none; }
+.tabla-total td { background: var(--crema); font-weight: 700; border-top: 2px solid var(--dorado); }
+
+.estado { text-align: center; padding: 3rem 1rem; color: var(--texto-suave); }
+.estado-icono { font-size: 36px; margin-bottom: 12px; }
+
+/* FOOTER */
+.footer {
+  background: var(--crema); color: var(--texto-suave); text-align: center;
+  padding: 1.25rem; font-size: 12px; margin-top: 3rem;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  border-top: 1px solid var(--borde);
+}
+.footer img { height: 22px; width: auto; object-fit: contain; }
+
+@media (max-width: 900px) {
+  .navbar { padding: 0 1rem; }
+  .navbar-menu { display: none; }
+  .navbar-menu.abierto {
+    display: flex; flex-direction: column; position: fixed; top: 64px; left: 0; width: 100%;
+    background: var(--vino-oscuro); padding: 1rem; gap: 4px; z-index: 99; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .navbar-menu.abierto a { padding: 10px 14px; font-size: 14px; }
+  .btn-hamburguesa { display: flex; }
+  .navbar-divider { display: none; }
+  .contenedor { padding: 1rem; }
+  .resultado-wrap { grid-template-columns: 1fr; }
+  .barra-etiqueta { width: 90px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a class="navbar-brand" href="ENS_BCS.html">
+    <img src="https://labnie.github.io/Repositorio_institucional/logotipo-ens.png" alt="ENS-BCS" class="navbar-logo">
+    <div class="navbar-title">
+      <strong>Repositorio Institucional</strong>
+      <small>ENS "Profr. Enrique Estrada Lucero" · BCS</small>
+    </div>
+  </a>
+  <div class="navbar-divider"></div>
+  <div class="navbar-menu" id="navbarMenu">
+    <a href="ENS_BCS.html">Inicio</a>
+    <a href="#" class="active">📊 Estadísticas</a>
+    <a href="mapa_observatorio.html" class="observatorio">🗺 Observatorio</a>
+    <a href="ENS_BCS.html">Repositorio</a>
+  </div>
+  <button class="btn-hamburguesa" onclick="toggleMenu()" id="btnHamburguesa">☰</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Estadísticas del Repositorio</h1>
+    <p class="hero-sub">Explora la producción normalista cruzando variables: año, sede, tipo de documento, programa y asesor(a)</p>
+  </div>
+</div>
+
+<!-- CONTENEDOR -->
+<div class="contenedor">
+
+  <!-- RESUMEN -->
+  <div class="resumen-cards" id="resumenCards"></div>
+
+  <!-- CONTROLES -->
+  <div class="controles">
+    <div class="controles-titulo">Construye tu consulta</div>
+    <div class="controles-grid">
+      <div class="control-grupo">
+        <label>Mostrar documentos por</label>
+        <select id="ejePrincipal" onchange="render()">
+          <option value="Año">Año</option>
+          <option value="Tipo de documento">Tipo de documento</option>
+          <option value="Programa de estudio">Programa de estudio</option>
+          <option value="Sede">Sede</option>
+          <option value="Asesor (a)">Asesor (a)</option>
+          <option value="Escuela de práctica">Escuela de práctica</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filtros-titulo">Acotar resultados (opcional)</div>
+    <div class="controles-grid">
+      <div class="control-grupo">
+        <label>Sede</label>
+        <select id="fSede" onchange="render()"><option value="">Todas</option></select>
+      </div>
+      <div class="control-grupo">
+        <label>Año</label>
+        <select id="fAnio" onchange="render()"><option value="">Todos</option></select>
+      </div>
+      <div class="control-grupo">
+        <label>Tipo de documento</label>
+        <select id="fTipo" onchange="render()"><option value="">Todos</option></select>
+      </div>
+      <div class="control-grupo">
+        <label>Programa de estudio</label>
+        <select id="fPrograma" onchange="render()"><option value="">Todos</option></select>
+      </div>
+    </div>
+    <button class="btn-limpiar-filtros" onclick="limpiarFiltros()">Limpiar filtros</button>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="resultado-wrap">
+    <div class="panel">
+      <div class="panel-titulo" id="graficaTitulo">Documentos por año</div>
+      <div class="panel-sub" id="graficaSub"></div>
+      <div id="grafica">
+        <div class="estado"><div class="estado-icono">⏳</div><p>Cargando datos…</p></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-titulo">Detalle numérico</div>
+      <div class="panel-sub">Valores exactos de la consulta actual</div>
+      <div id="tablaWrap"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <img src="https://labnie.github.io/repositorio-normal/original-logo-2-lab.png" alt="LABNIE">
+  Responsable de la base de datos del repositorio: Uri Argumedo Hernández &nbsp;·&nbsp;
+  Plataforma desarrollada por el LabNIE con asistencia de inteligencia artificial (Anthropic)
+</div>
+
+<script>
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQN3VnXH148TripGiwhOyJdRbMmIKBkIOrupfPuvtFI9peLtS8kj4Z-L7tOXVJ9aA/pub?output=csv";
+let allDocs = [];
+
+function toggleMenu() {
+  const menu = document.getElementById("navbarMenu");
+  const btn = document.getElementById("btnHamburguesa");
+  menu.classList.toggle("abierto");
+  btn.textContent = menu.classList.contains("abierto") ? "✕" : "☰";
+}
+
+function parseCSV(text) {
+  const lines = text.split("\n");
+  const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, "").trim());
+  return lines.slice(1).filter(l => l.trim()).map(line => {
+    const values = [];
+    let cur = "", inQ = false;
+    for (let c of line) {
+      if (c === '"') { inQ = !inQ; }
+      else if (c === ',' && !inQ) { values.push(cur.trim()); cur = ""; }
+      else cur += c;
+    }
+    values.push(cur.trim());
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = (values[i] || "").replace(/^"|"$/g, "").trim(); });
+    return obj;
+  });
+}
+
+function llenarFiltro(id, campo) {
+  const sel = document.getElementById(id);
+  const valores = [...new Set(allDocs.map(d => d[campo]).filter(Boolean))].sort((a,b) => {
+    if (campo === "Año") return b.localeCompare(a);
+    return a.localeCompare(b, "es");
+  });
+  valores.forEach(v => {
+    const o = document.createElement("option");
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+}
+
+function limpiarFiltros() {
+  ["fSede","fAnio","fTipo","fPrograma"].forEach(id => document.getElementById(id).value = "");
+  render();
+}
+
+function aplicarFiltros() {
+  const sede = document.getElementById("fSede").value;
+  const anio = document.getElementById("fAnio").value;
+  const tipo = document.getElementById("fTipo").value;
+  const prog = document.getElementById("fPrograma").value;
+  return allDocs.filter(d =>
+    (!sede || d["Sede"] === sede) &&
+    (!anio || d["Año"] === anio) &&
+    (!tipo || d["Tipo de documento"] === tipo) &&
+    (!prog || d["Programa de estudio"] === prog)
+  );
+}
+
+function render() {
+  const eje = document.getElementById("ejePrincipal").value;
+  const docs = aplicarFiltros();
+
+  // Agrupar
+  const conteo = {};
+  docs.forEach(d => {
+    const clave = d[eje] || "(sin dato)";
+    conteo[clave] = (conteo[clave] || 0) + 1;
+  });
+
+  let entradas = Object.entries(conteo);
+  // Ordenar: por año descendente; el resto por cantidad descendente
+  if (eje === "Año") {
+    entradas.sort((a,b) => b[0].localeCompare(a[0]));
+  } else {
+    entradas.sort((a,b) => b[1] - a[1]);
+  }
+
+  // Título y subtítulo
+  document.getElementById("graficaTitulo").textContent = "Documentos por " + eje.toLowerCase();
+  const filtrosActivos = ["fSede","fAnio","fTipo","fPrograma"]
+    .map(id => document.getElementById(id).value).filter(Boolean);
+  document.getElementById("graficaSub").textContent =
+    `${docs.length} documento${docs.length !== 1 ? "s" : ""}` +
+    (filtrosActivos.length ? ` · filtrado por: ${filtrosActivos.join(", ")}` : " · sin filtros");
+
+  const grafica = document.getElementById("grafica");
+  const tablaWrap = document.getElementById("tablaWrap");
+
+  if (entradas.length === 0) {
+    grafica.innerHTML = `<div class="estado"><div class="estado-icono">🔍</div><p>No hay documentos con esta combinación de filtros.</p></div>`;
+    tablaWrap.innerHTML = "";
+    return;
+  }
+
+  const maxVal = Math.max(...entradas.map(e => e[1]));
+
+  // Gráfica de barras
+  grafica.innerHTML = entradas.map(([etq, val]) => {
+    const pct = maxVal > 0 ? (val / maxVal * 100) : 0;
+    return `
+      <div class="barra-fila">
+        <div class="barra-etiqueta">${etq}</div>
+        <div class="barra-track">
+          <div class="barra-relleno ${val === 0 ? "cero" : ""}" style="width:${Math.max(pct, 4)}%">${val}</div>
+        </div>
+      </div>`;
+  }).join("");
+
+  // Tabla
+  const total = entradas.reduce((s, e) => s + e[1], 0);
+  tablaWrap.innerHTML = `
+    <table class="tabla-datos">
+      <thead><tr><th>${eje}</th><th>Documentos</th></tr></thead>
+      <tbody>
+        ${entradas.map(([etq, val]) => `<tr><td>${etq}</td><td>${val}</td></tr>`).join("")}
+        <tr class="tabla-total"><td>Total</td><td>${total}</td></tr>
+      </tbody>
+    </table>`;
+}
+
+function poblarResumen() {
+  const total = allDocs.length;
+  const sedes = new Set(allDocs.map(d => d["Sede"]).filter(Boolean)).size;
+  const programas = new Set(allDocs.map(d => d["Programa de estudio"]).filter(Boolean)).size;
+  const anios = [...new Set(allDocs.map(d => d["Año"]).filter(Boolean))];
+  const rango = anios.length ? `${Math.min(...anios)}–${Math.max(...anios)}` : "—";
+  document.getElementById("resumenCards").innerHTML = `
+    <div class="resumen-card"><div class="resumen-num">${total}</div><div class="resumen-label">Documentos totales</div></div>
+    <div class="resumen-card"><div class="resumen-num">${sedes}</div><div class="resumen-label">Sedes</div></div>
+    <div class="resumen-card"><div class="resumen-num">${programas}</div><div class="resumen-label">Programas de estudio</div></div>
+    <div class="resumen-card"><div class="resumen-num">${rango}</div><div class="resumen-label">Años cubiertos</div></div>`;
+}
+
+fetch(CSV_URL)
+  .then(r => { if (!r.ok) throw new Error(); return r.text(); })
+  .then(text => {
+    allDocs = parseCSV(text).filter(d => d["Título"]);
+    if (allDocs.length === 0) {
+      document.getElementById("grafica").innerHTML = `<div class="estado"><div class="estado-icono">⚠️</div><p>No se encontraron documentos.</p></div>`;
+      return;
+    }
+    llenarFiltro("fSede", "Sede");
+    llenarFiltro("fAnio", "Año");
+    llenarFiltro("fTipo", "Tipo de documento");
+    llenarFiltro("fPrograma", "Programa de estudio");
+    poblarResumen();
+    render();
+  })
+  .catch(() => {
+    document.getElementById("grafica").innerHTML = `<div class="estado"><div class="estado-icono">⚠️</div><p>No se pudo conectar con la base de datos.</p></div>`;
+  });
+</script>
+</body>
+</html>
