@@ -1218,6 +1218,29 @@ async function enviarSolicitud() {
     return;
   }
 
+  // Validación de formato de correo
+  const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+  if (!correoValido) {
+    alert("Por favor ingresa un correo electrónico válido.");
+    return;
+  }
+
+  // Límite de solicitudes por sesión (máximo 5)
+  const enviadas = parseInt(sessionStorage.getItem("solicitudesEnviadas") || "0", 10);
+  if (enviadas >= 5) {
+    alert("Has alcanzado el límite de solicitudes para esta sesión. Si necesitas solicitar más documentos, por favor escríbenos directamente o vuelve a intentarlo más tarde.");
+    return;
+  }
+
+  // Pausa mínima entre envíos (5 segundos)
+  const ultimoEnvio = parseInt(sessionStorage.getItem("ultimoEnvio") || "0", 10);
+  const ahora = Date.now();
+  const segundosRestantes = Math.ceil((5000 - (ahora - ultimoEnvio)) / 1000);
+  if (ultimoEnvio && segundosRestantes > 0) {
+    alert(`Por favor espera ${segundosRestantes} segundo${segundosRestantes !== 1 ? "s" : ""} antes de enviar otra solicitud.`);
+    return;
+  }
+
   // Determinar si es uno o varios documentos
   const esMasivo = Array.isArray(docSolicitado);
   const docs = esMasivo ? docSolicitado : [docSolicitado];
@@ -1250,6 +1273,10 @@ async function enviarSolicitud() {
       document.querySelectorAll('.card-checkbox').forEach(cb => { cb.checked = false; });
       document.querySelectorAll('.card').forEach(c => c.classList.remove('seleccionada'));
     }
+
+    // Registrar el envío exitoso para los controles de sesión
+    sessionStorage.setItem("solicitudesEnviadas", String(enviadas + 1));
+    sessionStorage.setItem("ultimoEnvio", String(Date.now()));
 
     btnEnviar.textContent = "Enviar solicitud";
     btnEnviar.disabled = false;
