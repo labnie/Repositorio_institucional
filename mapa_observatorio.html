@@ -281,6 +281,138 @@ body {
 }
 
 .footer img { height: 22px; width: auto; object-fit: contain; opacity: 0.7; }
+
+/* ── EXPLORADOR DE ESCUELAS Y CONTEXTOS ── */
+.explorador-seccion {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 2.5rem;
+}
+.explorador-encabezado {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  border-bottom: 2px solid var(--borde);
+  padding-bottom: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.explorador-encabezado h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(17px, 2.4vw, 23px);
+  font-weight: 600;
+  color: var(--vino);
+  line-height: 1.25;
+}
+.explorador-encabezado h2 .barra {
+  display: block;
+  width: 48px; height: 2px;
+  background: var(--dorado);
+  margin-top: 8px; border-radius: 2px;
+}
+.explorador-encabezado p {
+  font-size: 12px;
+  color: var(--texto-suave);
+  max-width: 460px;
+  line-height: 1.6;
+  text-align: right;
+}
+.exp-layout {
+  display: grid;
+  grid-template-columns: 390px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+.exp-panel {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(74,15,28,0.06);
+}
+.exp-controles { padding: 14px; border-bottom: 1px solid var(--borde); background: var(--crema); }
+.exp-buscar {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid var(--borde); border-radius: 8px;
+  font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none;
+  background: var(--blanco); color: var(--texto);
+}
+.exp-buscar:focus { border-color: var(--vino-claro); box-shadow: 0 0 0 3px rgba(140,42,62,0.10); }
+.exp-filtros { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.exp-chip {
+  font-size: 11.5px; padding: 6px 12px;
+  border: 1px solid var(--borde); border-radius: 20px;
+  background: var(--blanco); cursor: pointer; color: var(--texto-suave);
+  transition: 0.15s; user-select: none; font-family: 'DM Sans', sans-serif;
+}
+.exp-chip:hover { border-color: var(--vino-claro); }
+.exp-chip.activo { background: var(--vino); border-color: var(--vino); color: var(--blanco); }
+.exp-conteo { font-size: 11px; color: var(--texto-suave); margin-top: 10px; letter-spacing: 0.02em; }
+.exp-lista { max-height: 580px; overflow-y: auto; }
+.exp-lista::-webkit-scrollbar { width: 8px; }
+.exp-lista::-webkit-scrollbar-thumb { background: var(--borde); border-radius: 4px; }
+.exp-item {
+  padding: 11px 14px; border-bottom: 1px solid var(--borde);
+  cursor: pointer; transition: 0.12s; display: flex; align-items: center; gap: 10px;
+}
+.exp-item:hover { background: var(--crema); }
+.exp-item.seleccionado { background: #f3e9ea; border-left: 3px solid var(--vino); }
+.exp-punto { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.exp-item-cont { flex: 1; min-width: 0; }
+.exp-item-nombre { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--texto); }
+.exp-item-sub { font-size: 11px; color: var(--texto-suave); }
+.exp-nivel-tag { font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: 600; flex: none; }
+.exp-nivel-Preescolar { background: #f7e6d9; color: #9a4a1e; }
+.exp-nivel-Primaria { background: #f1e3e6; color: var(--vino); }
+.exp-nivel-Secundaria { background: #e7e0ec; color: #5b3a91; }
+
+.exp-detalle { min-height: 580px; }
+.exp-vacio {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; min-height: 580px; color: var(--texto-suave); padding: 40px; text-align: center;
+}
+.exp-vacio svg { margin-bottom: 14px; opacity: 0.35; color: var(--vino); }
+.exp-vacio div { font-size: 13.5px; line-height: 1.6; }
+.exp-dhead {
+  padding: 18px 20px; border-bottom: 1px solid var(--borde);
+  background: linear-gradient(135deg, var(--crema), #fbf6f2);
+}
+.exp-dhead h3 { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 600; color: var(--texto); line-height: 1.3; }
+.exp-dhead .exp-meta { font-size: 12.5px; color: var(--texto-suave); margin-top: 5px; }
+.exp-gmtag { display: inline-block; margin-top: 10px; font-size: 11.5px; font-weight: 700; color: #fff; padding: 5px 14px; border-radius: 20px; letter-spacing: 0.02em; }
+.exp-seccion { padding: 16px 20px; border-bottom: 1px solid var(--borde); }
+.exp-sec-titulo {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;
+}
+.exp-sec-escuela .exp-sec-titulo { color: var(--vino); }
+.exp-sec-contexto .exp-sec-titulo { color: #2e7d6f; }
+.exp-sbar { width: 4px; height: 16px; border-radius: 2px; }
+.exp-sec-escuela .exp-sbar { background: var(--vino); }
+.exp-sec-contexto .exp-sbar { background: #2e7d6f; }
+.exp-sec-nota { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--texto-suave); }
+.exp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
+.exp-stat { background: var(--crema); border: 1px solid var(--borde); border-radius: 9px; padding: 11px 12px; }
+.exp-stat .exp-v { font-size: 22px; font-weight: 700; color: var(--vino); line-height: 1.1; }
+.exp-stat .exp-l { font-size: 10.5px; color: var(--texto-suave); margin-top: 4px; line-height: 1.3; }
+.exp-ind { margin-bottom: 12px; }
+.exp-ind:last-child { margin-bottom: 0; }
+.exp-ind-top { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+.exp-ind-top .exp-lab { color: var(--texto); }
+.exp-ind-top .exp-val { font-weight: 700; color: #2e7d6f; }
+.exp-track { height: 7px; background: #e9eef0; border-radius: 4px; overflow: hidden; }
+.exp-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.exp-foot { padding: 12px 20px; font-size: 10.5px; color: var(--texto-suave); background: var(--crema); line-height: 1.5; }
+
+@media (max-width: 900px) {
+  .explorador-seccion { padding: 1rem; }
+  .explorador-encabezado p { text-align: left; }
+  .exp-layout { grid-template-columns: 1fr; }
+  .exp-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 </style>
 </head>
 <body>
@@ -299,6 +431,7 @@ body {
     <a href="ENS_BCS.html" class="repositorio">Inicio</a>
     <a href="estadisticas.html" class="repositorio">📊 Estadísticas</a>
     <a href="#" class="active">🗺 Observatorio</a>
+    <a href="#explorador" class="repositorio">🔎 Explorador de datos</a>
     <a href="ENS_BCS.html" class="repositorio">Acerca de</a>
   </div>
 </nav>
@@ -329,12 +462,129 @@ body {
   </div>
 </div>
 
+
+<!-- EXPLORADOR DE ESCUELAS Y CONTEXTOS -->
+<section class="explorador-seccion" id="explorador">
+  <div class="explorador-encabezado">
+    <h2>Explorador de escuelas y contextos escolares<span class="barra"></span></h2>
+    <p>Consulta las características de cada escuela de práctica y de su contexto social. Fuentes: Formato 911 (inicio 2024-2025) y CONAPO (2020).</p>
+  </div>
+  <div class="exp-layout">
+    <div class="exp-panel">
+      <div class="exp-controles">
+        <input class="exp-buscar" id="expBuscar" placeholder="Buscar escuela o colonia…" autocomplete="off">
+        <div class="exp-filtros" id="expFiltros">
+          <span class="exp-chip activo" data-f="all">Todas</span>
+          <span class="exp-chip" data-f="Preescolar">Preescolar</span>
+          <span class="exp-chip" data-f="Primaria">Primaria</span>
+          <span class="exp-chip" data-f="Secundaria">Secundaria</span>
+        </div>
+        <div class="exp-conteo" id="expConteo"></div>
+      </div>
+      <div class="exp-lista" id="expLista"></div>
+    </div>
+    <div class="exp-panel exp-detalle" id="expDetalle">
+      <div class="exp-vacio">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/></svg>
+        <div>Selecciona una escuela de la lista<br>para ver sus características y las de su contexto.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <div class="footer">
   <img src="https://labnie.github.io/repositorio-normal/original-logo-2-lab.png" alt="LABNIE">
   Responsable de mapa interactivo: Tito Fernando Piñeda Verdugo &nbsp;·&nbsp;
   Plataforma desarrollada por el LabNIE con asistencia de inteligencia artificial (Anthropic)
 </div>
+
+
+<script>
+(function(){
+  const DATA = [{"nombre": "Preescolar \"Ricardo Flores Magón\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "El Centenario (localidad)", "mat": 68, "disc": 0, "tras": 1, "leng": 0, "apt": 0, "aulas": 5, "gm": "Bajo", "pob": 4657.0, "analf": 25.9, "salud": 16.8, "drenaje": 0.2, "agua": 1.1, "piso": 2.3, "hac": 22.8, "refri": 2.8, "internet": 40.1, "celular": 5.2}, {"nombre": "Preescolar para niños migrantes No. 13", "nivel": "Preescolar", "localidad": "Chametla ", "colonia": "Chametla ", "mat": 36, "disc": 0, "tras": 1, "leng": 3, "apt": 0, "aulas": 2, "gm": "Bajo", "pob": 2675.0, "analf": 21.4, "salud": 19.0, "drenaje": 1.0, "agua": 1.0, "piso": 1.2, "hac": 12.7, "refri": 2.5, "internet": 29.1, "celular": 3.0}, {"nombre": "Jardín de niños \"Tomás Alva Edison\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "San Pablo Guelatao", "mat": 50, "disc": 0, "tras": 2, "leng": 0, "apt": 0, "aulas": 4, "gm": "Bajo", "pob": 1107.0, "analf": 26.4, "salud": 16.1, "drenaje": 0.1, "agua": 0.6, "piso": 2.5, "hac": 21.9, "refri": 2.9, "internet": 29.8, "celular": 4.4}, {"nombre": "Jardín de niños \"Rosario Rosas\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Vicente Guerrero", "mat": 57, "disc": 0, "tras": 2, "leng": 0, "apt": 0, "aulas": 3, "gm": "Bajo", "pob": 8317.0, "analf": 23.0, "salud": 13.5, "drenaje": 0.1, "agua": 0.2, "piso": 0.9, "hac": 15.9, "refri": 2.2, "internet": 26.1, "celular": 5.0}, {"nombre": "Jardín de niños \"Profr. Pedro Peláez Manríquez\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Ampliación Lázaro Cárdenas", "mat": 85, "disc": 0, "tras": 2, "leng": 0, "apt": 0, "aulas": 6, "gm": "Bajo", "pob": 1235.0, "analf": 30.3, "salud": 16.9, "drenaje": 0.8, "agua": 1.8, "piso": 1.0, "hac": 26.4, "refri": 3.6, "internet": 33.9, "celular": 2.3}, {"nombre": "Jardín de niños \"Martina viuda de Díaz\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Los Olivos", "mat": 42, "disc": 0, "tras": 4, "leng": 0, "apt": 0, "aulas": 8, "gm": "Bajo", "pob": 5204.0, "analf": 21.2, "salud": 13.4, "drenaje": 0.1, "agua": 0.2, "piso": 1.7, "hac": 11.9, "refri": 1.7, "internet": 21.3, "celular": 5.3}, {"nombre": "Jardín de niños \"Mario Manríquez Manríquez\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Diana Laura", "mat": 151, "disc": 0, "tras": 1, "leng": 0, "apt": 2, "aulas": 6, "gm": "Bajo", "pob": 5687.0, "analf": 19.7, "salud": 15.9, "drenaje": 0.0, "agua": 0.2, "piso": 2.3, "hac": 19.0, "refri": 2.6, "internet": 22.7, "celular": 2.5}, {"nombre": "Jardín de niños \"Profra. María Luisa Navarro Ojeda\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "El Esterito", "mat": 65, "disc": 0, "tras": 1, "leng": 0, "apt": 0, "aulas": 6, "gm": "Bajo", "pob": 3236.0, "analf": 17.7, "salud": 13.3, "drenaje": 0.0, "agua": 0.3, "piso": 0.9, "hac": 10.2, "refri": 2.2, "internet": 20.7, "celular": 6.5}, {"nombre": "Jardín de niños \"Juan María de Salvatierra\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "8 de Octubre 2da. Sección", "mat": 42, "disc": 0, "tras": 2, "leng": 0, "apt": 0, "aulas": 5, "gm": "Bajo", "pob": 1466.0, "analf": 23.5, "salud": 10.2, "drenaje": 0.0, "agua": 0.1, "piso": 0.2, "hac": 18.2, "refri": 2.5, "internet": 23.2, "celular": 3.9}, {"nombre": "Jardín de niños \"Juan Enrique Pestalozzi\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "El Esterito", "mat": 55, "disc": 1, "tras": 3, "leng": 0, "apt": 0, "aulas": 4, "gm": "Bajo", "pob": 3236.0, "analf": 17.7, "salud": 13.3, "drenaje": 0.0, "agua": 0.3, "piso": 0.9, "hac": 10.2, "refri": 2.2, "internet": 20.7, "celular": 6.5}, {"nombre": "Jardín de niños \"José Luis Guerrero Romero\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Calafia", "mat": 99, "disc": 3, "tras": 2, "leng": 0, "apt": 0, "aulas": 5, "gm": "Medio", "pob": 2214.0, "analf": 30.3, "salud": 14.8, "drenaje": 0.8, "agua": 6.5, "piso": 4.8, "hac": 27.1, "refri": 6.6, "internet": 57.2, "celular": 3.4}, {"nombre": "Jardín de niños \"Josefina Ramos del Río\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Vicente Guerrero", "mat": 104, "disc": 0, "tras": 4, "leng": 0, "apt": 0, "aulas": 7, "gm": "Bajo", "pob": 8317.0, "analf": 23.0, "salud": 13.5, "drenaje": 0.1, "agua": 0.2, "piso": 0.9, "hac": 15.9, "refri": 2.2, "internet": 26.1, "celular": 5.0}, {"nombre": "Jardín de niños \"Jaime Nuno\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Mezquitito", "mat": 81, "disc": 0, "tras": 3, "leng": 0, "apt": 0, "aulas": 5, "gm": "Bajo", "pob": 657.0, "analf": 23.7, "salud": 13.9, "drenaje": 0.2, "agua": 0.7, "piso": 2.0, "hac": 22.5, "refri": 2.4, "internet": 26.9, "celular": 2.6}, {"nombre": "Jardín de niños \"Hans Christian Andersen\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "El Calandrio", "mat": 124, "disc": 0, "tras": 7, "leng": 0, "apt": 0, "aulas": 8, "gm": "Bajo", "pob": 941.0, "analf": 29.8, "salud": 14.6, "drenaje": 0.5, "agua": 0.9, "piso": 2.5, "hac": 23.7, "refri": 4.0, "internet": 29.3, "celular": 4.8}, {"nombre": "Jardín de niños \"Guaycura\"", "nivel": "Preescolar", "localidad": "El Centenario", "colonia": "El Centenario ", "mat": 73, "disc": 1, "tras": 3, "leng": 0, "apt": 0, "aulas": 4, "gm": "Bajo", "pob": 4657.0, "analf": 25.9, "salud": 16.8, "drenaje": 0.2, "agua": 1.1, "piso": 2.3, "hac": 22.8, "refri": 2.8, "internet": 40.1, "celular": 5.2}, {"nombre": "Jardín de niños \"Guadalupe Victoria\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Jardines del Sur", "mat": 43, "disc": 0, "tras": 6, "leng": 0, "apt": 0, "aulas": 5, "gm": "Bajo", "pob": 557.0, "analf": 20.4, "salud": 12.6, "drenaje": 0.2, "agua": 1.7, "piso": 3.7, "hac": 22.9, "refri": 2.4, "internet": 28.2, "celular": 2.8}, {"nombre": "Jardín de niños \"Gabriela Mistral\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Márquez de León", "mat": 71, "disc": 0, "tras": 1, "leng": 0, "apt": 2, "aulas": 3, "gm": "Muy alto", "pob": 388.0, "analf": 38.5, "salud": 19.1, "drenaje": 0.9, "agua": 20.2, "piso": 11.1, "hac": 33.3, "refri": 16.8, "internet": 47.1, "celular": 5.8}, {"nombre": "Jardín de niños \"Francisco Zarco\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Solidaridad I", "mat": 77, "disc": 0, "tras": 1, "leng": 0, "apt": 0, "aulas": 5, "gm": "Bajo", "pob": 1532.0, "analf": 23.5, "salud": 14.1, "drenaje": 0.1, "agua": 0.5, "piso": 1.9, "hac": 20.2, "refri": 2.1, "internet": 25.7, "celular": 3.9}, {"nombre": "Jardín de niños \"Francisco Romero Escopinichi\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "La Pasión", "mat": 106, "disc": 1, "tras": 0, "leng": 0, "apt": 0, "aulas": 4, "gm": "Alto", "pob": 2096.0, "analf": 45.2, "salud": 18.3, "drenaje": 1.1, "agua": 1.7, "piso": 18.3, "hac": 38.1, "refri": 11.1, "internet": 94.5, "celular": 5.2}, {"nombre": "Estancia de Desarrollo Infantil No. 61", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "8 de Octubre 2da. Sección", "mat": 54, "disc": 0, "tras": 7, "leng": 0, "apt": 0, "aulas": 3, "gm": "Bajo", "pob": 1466.0, "analf": 23.5, "salud": 10.2, "drenaje": 0.0, "agua": 0.1, "piso": 0.2, "hac": 18.2, "refri": 2.5, "internet": 23.2, "celular": 3.9}, {"nombre": "Jardín de niños \"Francisco Gabilondo Soler\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Ampliación Navarro Rubio", "mat": 62, "disc": 0, "tras": 2, "leng": 0, "apt": 0, "aulas": 4, "gm": "Medio", "pob": 493.0, "analf": 35.5, "salud": 14.7, "drenaje": 0.6, "agua": 1.9, "piso": 4.7, "hac": 29.8, "refri": 4.4, "internet": 40.1, "celular": 5.2}, {"nombre": "Jardín de niños \"El Osito Mandarín\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "20 de Noviembre", "mat": 59, "disc": 0, "tras": 0, "leng": 0, "apt": 0, "aulas": 3, "gm": "Bajo", "pob": 909.0, "analf": 27.2, "salud": 14.7, "drenaje": 0.0, "agua": 0.3, "piso": 1.5, "hac": 21.0, "refri": 2.7, "internet": 32.8, "celular": 3.9}, {"nombre": "Jardín de niños \"Domingo Carballo Félix\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "La Rinconada", "mat": 85, "disc": 1, "tras": 0, "leng": 0, "apt": 0, "aulas": 5, "gm": "Bajo", "pob": 3792.0, "analf": 24.7, "salud": 15.0, "drenaje": 0.1, "agua": 0.1, "piso": 5.4, "hac": 17.5, "refri": 2.7, "internet": 26.4, "celular": 5.9}, {"nombre": "Jardín de niños \"Diana Laura Riojas Reyes\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Agua Escondida", "mat": 82, "disc": 0, "tras": 2, "leng": 0, "apt": 0, "aulas": 4, "gm": "Medio", "pob": 1478.0, "analf": 28.9, "salud": 14.3, "drenaje": 0.1, "agua": 2.4, "piso": 5.4, "hac": 28.9, "refri": 4.2, "internet": 37.3, "celular": 3.1}, {"nombre": "Jardín de niños \"Cuauhtémoc\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "20 de Noviembre", "mat": 50, "disc": 1, "tras": 5, "leng": 0, "apt": 4, "aulas": 4, "gm": "Bajo", "pob": 909.0, "analf": 27.2, "salud": 14.7, "drenaje": 0.0, "agua": 0.3, "piso": 1.5, "hac": 21.0, "refri": 2.7, "internet": 32.8, "celular": 3.9}, {"nombre": "Jardín de niños \"Bicentenario de la Independencia de México\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Olas Altas", "mat": 131, "disc": 0, "tras": 20, "leng": 0, "apt": 0, "aulas": 6, "gm": "Bajo", "pob": 3331.0, "analf": 22.5, "salud": 16.1, "drenaje": 0.0, "agua": 0.3, "piso": 0.7, "hac": 39.7, "refri": 2.7, "internet": 42.8, "celular": 1.7}, {"nombre": "Jardín de niños \"Ángel César Mendoza Arámburo\"", "nivel": "Preescolar", "localidad": "La Paz", "colonia": "Independencia", "mat": 90, "disc": 0, "tras": 3, "leng": 0, "apt": 0, "aulas": 10, "gm": "Bajo", "pob": 375.0, "analf": 29.4, "salud": 13.9, "drenaje": 0.0, "agua": 0.0, "piso": 0.6, "hac": 22.4, "refri": 1.9, "internet": 34.7, "celular": 2.8}, {"nombre": "Jardín de niños \"Agustín Arriola Martínez\"", "nivel": "Preescolar", "localidad": "Chametla ", "colonia": "Chametla ", "mat": 57, "disc": 0, "tras": 0, "leng": 0, "apt": 0, "aulas": 3, "gm": "Bajo", "pob": 2675.0, "analf": 21.4, "salud": 19.0, "drenaje": 1.0, "agua": 1.0, "piso": 1.2, "hac": 12.7, "refri": 2.5, "internet": 29.1, "celular": 3.0}, {"nombre": "Escuela Primaria \"Rosario Castellanos\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "La Rinconada", "mat": 167, "disc": 3, "tras": 2, "leng": 0, "apt": 1, "aulas": 11, "gm": "Bajo", "pob": 3792.0, "analf": 24.7, "salud": 15.0, "drenaje": 0.1, "agua": 0.1, "piso": 5.4, "hac": 17.5, "refri": 2.7, "internet": 26.4, "celular": 5.9}, {"nombre": "Escuela Primaria \"Virginia Peralta Albáñez\"", "nivel": "Primaria", "localidad": "El Centenario", "colonia": "El Centenario", "mat": 264, "disc": 2, "tras": 2, "leng": 0, "apt": 0, "aulas": 12, "gm": "Bajo", "pob": 4657.0, "analf": 25.9, "salud": 16.8, "drenaje": 0.2, "agua": 1.1, "piso": 2.3, "hac": 22.8, "refri": 2.8, "internet": 40.1, "celular": 5.2}, {"nombre": "Escuela Primaria \"Víctor Hugo\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "El Calandrio", "mat": 371, "disc": 3, "tras": 12, "leng": 0, "apt": 1, "aulas": 13, "gm": "Bajo", "pob": 941.0, "analf": 29.8, "salud": 14.6, "drenaje": 0.5, "agua": 0.9, "piso": 2.5, "hac": 23.7, "refri": 4.0, "internet": 29.3, "celular": 4.8}, {"nombre": "Escuela Primaria \"Profr. Jesús Castro Agúndez\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Flores Magón", "mat": 119, "disc": 3, "tras": 2, "leng": 0, "apt": 0, "aulas": 12, "gm": "Bajo", "pob": 1074.0, "analf": 20.8, "salud": 12.9, "drenaje": 0.1, "agua": 0.3, "piso": 3.8, "hac": 10.3, "refri": 1.1, "internet": 19.7, "celular": 3.2}, {"nombre": "Escuela Primaria \"Roberto García Tortoledo\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Villas de Guadalupe", "mat": 264, "disc": 0, "tras": 3, "leng": 0, "apt": 0, "aulas": 12, "gm": "Muy alto", "pob": 1280.0, "analf": 38.9, "salud": 6.0, "drenaje": 0.5, "agua": 34.0, "piso": 10.9, "hac": 47.7, "refri": 11.7, "internet": 59.4, "celular": 3.9}, {"nombre": "Escuela primaria para niños migrantes No. 14", "nivel": "Primaria", "localidad": "Chametla", "colonia": "Chametla", "mat": 67, "disc": 0, "tras": 0, "leng": 17, "apt": 0, "aulas": 3, "gm": "Bajo", "pob": 2675.0, "analf": 21.4, "salud": 19.0, "drenaje": 1.0, "agua": 1.0, "piso": 1.2, "hac": 12.7, "refri": 2.5, "internet": 29.1, "celular": 3.0}, {"nombre": "Escuela Primaria \"Jerónimo Ahumada Armenta\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Guadalupe Victoria", "mat": 295, "disc": 2, "tras": 22, "leng": 0, "apt": 1, "aulas": 15, "gm": "Bajo", "pob": 1104.0, "analf": 24.1, "salud": 12.9, "drenaje": 0.4, "agua": 0.4, "piso": 0.5, "hac": 25.3, "refri": 2.6, "internet": 35.5, "celular": 2.6}, {"nombre": "Escuela Primaria \"Jesús Francisco Jerez Angulo\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Olas Altas", "mat": 468, "disc": 3, "tras": 10, "leng": 0, "apt": 1, "aulas": 18, "gm": "Bajo", "pob": 3331.0, "analf": 22.5, "salud": 16.1, "drenaje": 0.0, "agua": 0.3, "piso": 0.7, "hac": 39.7, "refri": 2.7, "internet": 42.8, "celular": 1.7}, {"nombre": "Escuela Primaria \"Leona Vicario\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "El Centenario (localidad)", "mat": 275, "disc": 4, "tras": 2, "leng": 0, "apt": 6, "aulas": 12, "gm": "Bajo", "pob": 4657.0, "analf": 25.9, "salud": 16.8, "drenaje": 0.2, "agua": 1.1, "piso": 2.3, "hac": 22.8, "refri": 2.8, "internet": 40.1, "celular": 5.2}, {"nombre": "Escuela Primaria \"Profr. José Rosario García Sánchez\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "La Rinconada", "mat": 172, "disc": 2, "tras": 4, "leng": 0, "apt": 6, "aulas": 12, "gm": "Bajo", "pob": 3792.0, "analf": 24.7, "salud": 15.0, "drenaje": 0.1, "agua": 0.1, "piso": 5.4, "hac": 17.5, "refri": 2.7, "internet": 26.4, "celular": 5.9}, {"nombre": "Escuela Primaria \"Gral. Vicente Guerrero\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Lienzo Charro", "mat": 246, "disc": 2, "tras": 4, "leng": 0, "apt": 0, "aulas": 14, "gm": "Bajo", "pob": 1458.0, "analf": 25.8, "salud": 13.0, "drenaje": 0.0, "agua": 0.1, "piso": 1.4, "hac": 18.3, "refri": 2.2, "internet": 26.6, "celular": 5.4}, {"nombre": "Escuela Primaria \"Gustavo Díaz Ordaz\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Márquez de León", "mat": 309, "disc": 0, "tras": 1, "leng": 0, "apt": 1, "aulas": 16, "gm": "Muy alto", "pob": 388.0, "analf": 38.5, "salud": 19.1, "drenaje": 0.9, "agua": 20.2, "piso": 11.1, "hac": 33.3, "refri": 16.8, "internet": 47.1, "celular": 5.8}, {"nombre": "Escuela Primaria \"Ignacio López Rayón\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Agua Escondida", "mat": 249, "disc": 1, "tras": 5, "leng": 4, "apt": 0, "aulas": 12, "gm": "Medio", "pob": 1478.0, "analf": 28.9, "salud": 14.3, "drenaje": 0.1, "agua": 2.4, "piso": 5.4, "hac": 28.9, "refri": 4.2, "internet": 37.3, "celular": 3.1}, {"nombre": "Escuela Primaria \"Jaime Álvarez Constantino\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Jardines del Sur", "mat": 229, "disc": 3, "tras": 7, "leng": 0, "apt": 3, "aulas": 11, "gm": "Bajo", "pob": 557.0, "analf": 20.4, "salud": 12.6, "drenaje": 0.2, "agua": 1.7, "piso": 3.7, "hac": 22.9, "refri": 2.4, "internet": 28.2, "celular": 2.8}, {"nombre": "Escuela Primaria \"Estado 30\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "8 de Octubre 2da. Sección", "mat": 0, "disc": 0, "tras": 0, "leng": 0, "apt": 0, "aulas": 0, "gm": "Bajo", "pob": 1466.0, "analf": 23.5, "salud": 10.2, "drenaje": 0.0, "agua": 0.1, "piso": 0.2, "hac": 18.2, "refri": 2.5, "internet": 23.2, "celular": 3.9}, {"nombre": "Escuela Primaria \"Fernando Jordán Juárez\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Vicente Guerrero", "mat": 213, "disc": 4, "tras": 4, "leng": 0, "apt": 0, "aulas": 16, "gm": "Bajo", "pob": 8317.0, "analf": 23.0, "salud": 13.5, "drenaje": 0.1, "agua": 0.2, "piso": 0.9, "hac": 15.9, "refri": 2.2, "internet": 26.1, "celular": 5.0}, {"nombre": "Escuela Primaria \"Francisco Cota Moreno\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Benito Juárez", "mat": 291, "disc": 3, "tras": 4, "leng": 0, "apt": 1, "aulas": 12, "gm": "Bajo", "pob": 3078.0, "analf": 25.1, "salud": 14.9, "drenaje": 0.1, "agua": 0.2, "piso": 0.8, "hac": 16.1, "refri": 2.2, "internet": 27.7, "celular": 3.6}, {"nombre": "Escuela Primaria \"Francisco I. Madero\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "El Esterito", "mat": 160, "disc": 1, "tras": 0, "leng": 0, "apt": 0, "aulas": 12, "gm": "Bajo", "pob": 3236.0, "analf": 17.7, "salud": 13.3, "drenaje": 0.0, "agua": 0.3, "piso": 0.9, "hac": 10.2, "refri": 2.2, "internet": 20.7, "celular": 6.5}, {"nombre": "Escuela Primaria \"Gral. Francisco J. Mújica\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Las Ladrilleras", "mat": 109, "disc": 4, "tras": 1, "leng": 0, "apt": 0, "aulas": 12, "gm": "Bajo", "pob": 1197.0, "analf": 23.8, "salud": 15.0, "drenaje": 0.1, "agua": 0.8, "piso": 1.0, "hac": 15.6, "refri": 2.2, "internet": 26.9, "celular": 5.3}, {"nombre": "Escuela Primaria \"Gral. Agustín Olachea Avilés\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Agustín Olachea", "mat": 275, "disc": 3, "tras": 6, "leng": 0, "apt": 3, "aulas": 12, "gm": "Bajo", "pob": 2700.0, "analf": 29.2, "salud": 13.6, "drenaje": 0.2, "agua": 2.4, "piso": 2.8, "hac": 27.0, "refri": 2.6, "internet": 37.8, "celular": 2.6}, {"nombre": "Escuela Primaria \"Carlos A. Carrillo\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Vicente Guerrero", "mat": 230, "disc": 1, "tras": 5, "leng": 0, "apt": 1, "aulas": 16, "gm": "Bajo", "pob": 8317.0, "analf": 23.0, "salud": 13.5, "drenaje": 0.1, "agua": 0.2, "piso": 0.9, "hac": 15.9, "refri": 2.2, "internet": 26.1, "celular": 5.0}, {"nombre": "Escuela Primaria \"Carlos Jerez Márquez\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Mezquitito", "mat": 275, "disc": 0, "tras": 3, "leng": 0, "apt": 0, "aulas": 13, "gm": "Bajo", "pob": 657.0, "analf": 23.7, "salud": 13.9, "drenaje": 0.2, "agua": 0.7, "piso": 2.0, "hac": 22.5, "refri": 2.4, "internet": 26.9, "celular": 2.6}, {"nombre": "Escuela Primaria \"Celerino Cano\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Navarro Rubio", "mat": 214, "disc": 1, "tras": 4, "leng": 0, "apt": 0, "aulas": 11, "gm": "Medio", "pob": 2706.0, "analf": 34.7, "salud": 15.0, "drenaje": 0.6, "agua": 1.6, "piso": 4.0, "hac": 27.2, "refri": 4.2, "internet": 38.2, "celular": 5.4}, {"nombre": "Escuela Primaria \"Diana Laura Riojas Reyes\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Guadalupe Victoria", "mat": 103, "disc": 1, "tras": 1, "leng": 0, "apt": 4, "aulas": 6, "gm": "Bajo", "pob": 1104.0, "analf": 24.1, "salud": 12.9, "drenaje": 0.4, "agua": 0.4, "piso": 0.5, "hac": 25.3, "refri": 2.6, "internet": 35.5, "celular": 2.6}, {"nombre": "Escuela Primaria \"Adolfo López Mateos\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Calafia", "mat": 332, "disc": 3, "tras": 7, "leng": 0, "apt": 2, "aulas": 13, "gm": "Medio", "pob": 2214.0, "analf": 30.3, "salud": 14.8, "drenaje": 0.8, "agua": 6.5, "piso": 4.8, "hac": 27.1, "refri": 6.6, "internet": 57.2, "celular": 3.4}, {"nombre": "Escuela Primaria \"5 de Abril\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "8 de Octubre 1ra. Sección", "mat": 132, "disc": 2, "tras": 5, "leng": 0, "apt": 0, "aulas": 9, "gm": "Bajo", "pob": 668.0, "analf": 27.5, "salud": 14.0, "drenaje": 0.1, "agua": 0.3, "piso": 0.4, "hac": 14.6, "refri": 1.2, "internet": 23.1, "celular": 7.3}, {"nombre": "Escuela Primaria \"20 de Noviembre\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "3 de Mayo II", "mat": 268, "disc": 4, "tras": 2, "leng": 0, "apt": 0, "aulas": 12, "gm": "Bajo", "pob": 1121.0, "analf": 19.7, "salud": 13.8, "drenaje": 0.0, "agua": 0.0, "piso": 4.0, "hac": 17.5, "refri": 1.6, "internet": 22.6, "celular": 2.9}, {"nombre": "Escuela Primaria \"24 de Febrero\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Diana Laura", "mat": 209, "disc": 2, "tras": 4, "leng": 0, "apt": 0, "aulas": 12, "gm": "Bajo", "pob": 5687.0, "analf": 19.7, "salud": 15.9, "drenaje": 0.0, "agua": 0.2, "piso": 2.3, "hac": 19.0, "refri": 2.6, "internet": 22.7, "celular": 2.5}, {"nombre": "Escuela Primaria \"Distrito Federal\"", "nivel": "Primaria", "localidad": "Chametla ", "colonia": "Chametla", "mat": 192, "disc": 1, "tras": 2, "leng": 0, "apt": 0, "aulas": 11, "gm": "Bajo", "pob": 2675.0, "analf": 21.4, "salud": 19.0, "drenaje": 1.0, "agua": 1.0, "piso": 1.2, "hac": 12.7, "refri": 2.5, "internet": 29.1, "celular": 3.0}, {"nombre": "Escuela Primaria \"Emma Isabel Osuna\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "La Escondida", "mat": 386, "disc": 12, "tras": 2, "leng": 0, "apt": 1, "aulas": 15, "gm": "Bajo", "pob": 2745.0, "analf": 25.9, "salud": 15.1, "drenaje": 0.2, "agua": 0.3, "piso": 0.6, "hac": 19.5, "refri": 1.8, "internet": 30.9, "celular": 2.7}, {"nombre": "Escuela Primaria \"Agustín Arriola Martínez\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Ciudad del Cielo", "mat": 146, "disc": 4, "tras": 2, "leng": 2, "apt": 1, "aulas": 14, "gm": "Bajo", "pob": 1921.0, "analf": 30.1, "salud": 16.4, "drenaje": 0.2, "agua": 0.3, "piso": 0.4, "hac": 24.7, "refri": 2.5, "internet": 33.3, "celular": 4.2}, {"nombre": "Escuela Primaria \"Antonio Verdugo Verduzco\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Agua Escondida", "mat": 359, "disc": 3, "tras": 1, "leng": 0, "apt": 0, "aulas": 13, "gm": "Medio", "pob": 1478.0, "analf": 28.9, "salud": 14.3, "drenaje": 0.1, "agua": 2.4, "piso": 5.4, "hac": 28.9, "refri": 4.2, "internet": 37.3, "celular": 3.1}, {"nombre": "Escuela Primaria \"Profr. Arturo Oropeza Villegas\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Francisco Villa", "mat": 170, "disc": 0, "tras": 1, "leng": 0, "apt": 1, "aulas": 12, "gm": "Bajo", "pob": 2877.0, "analf": 24.5, "salud": 13.6, "drenaje": 0.0, "agua": 0.1, "piso": 2.1, "hac": 16.6, "refri": 2.0, "internet": 27.7, "celular": 4.5}, {"nombre": "Escuela Primaria \"Benito Juárez\"", "nivel": "Primaria", "localidad": "La Paz", "colonia": "Los Olivos", "mat": 205, "disc": 0, "tras": 9, "leng": 0, "apt": 0, "aulas": 12, "gm": "Bajo", "pob": 5204.0, "analf": 21.2, "salud": 13.4, "drenaje": 0.1, "agua": 0.2, "piso": 1.7, "hac": 11.9, "refri": 1.7, "internet": 21.3, "celular": 5.3}, {"nombre": "Telesecundaria No. 62", "nivel": "Secundaria", "localidad": "Chametla", "colonia": "Chametla", "mat": 30, "disc": 1, "tras": 0, "leng": 15, "apt": 0, "aulas": 2, "gm": "Bajo", "pob": 2675.0, "analf": 21.4, "salud": 19.0, "drenaje": 1.0, "agua": 1.0, "piso": 1.2, "hac": 12.7, "refri": 2.5, "internet": 29.1, "celular": 3.0}, {"nombre": "Telesecundaria No. 53 \"José Emilio Pacheco\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "Olas Altas", "mat": 217, "disc": 9, "tras": 4, "leng": 0, "apt": 0, "aulas": 9, "gm": "Bajo", "pob": 3331.0, "analf": 22.5, "salud": 16.1, "drenaje": 0.0, "agua": 0.3, "piso": 0.7, "hac": 39.7, "refri": 2.7, "internet": 42.8, "celular": 1.7}, {"nombre": "Telesecundaria No. 58 \"Leonardo Da Vinci\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "La Pasión", "mat": 152, "disc": 3, "tras": 1, "leng": 1, "apt": 2, "aulas": 8, "gm": "Alto", "pob": 2096.0, "analf": 45.2, "salud": 18.3, "drenaje": 1.1, "agua": 1.7, "piso": 18.3, "hac": 38.1, "refri": 11.1, "internet": 94.5, "celular": 5.2}, {"nombre": "Telesecundaria No. 50 \"Gabriel García Márquez\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "Márquez de León", "mat": 207, "disc": 6, "tras": 3, "leng": 0, "apt": 0, "aulas": 9, "gm": "Muy alto", "pob": 388.0, "analf": 38.5, "salud": 19.1, "drenaje": 0.9, "agua": 20.2, "piso": 11.1, "hac": 33.3, "refri": 16.8, "internet": 47.1, "celular": 5.8}, {"nombre": "Escuela Secundaria Técnica No. 13 \"Alberto Andrés Alvarado Arámburo\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "Benito Juárez", "mat": 827, "disc": 9, "tras": 15, "leng": 0, "apt": 0, "aulas": 18, "gm": "Bajo", "pob": 3078.0, "analf": 25.1, "salud": 14.9, "drenaje": 0.1, "agua": 0.2, "piso": 0.8, "hac": 16.1, "refri": 2.2, "internet": 27.7, "celular": 3.6}, {"nombre": "Telesecundaria No. 40 \"Elvira Castillo Marrón\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "Calafia", "mat": 166, "disc": 3, "tras": 2, "leng": 0, "apt": 1, "aulas": 8, "gm": "Medio", "pob": 2214.0, "analf": 30.3, "salud": 14.8, "drenaje": 0.8, "agua": 6.5, "piso": 4.8, "hac": 27.1, "refri": 6.6, "internet": 57.2, "celular": 3.4}, {"nombre": "Telesecundaria No. 38 \"Francisco King Rondero\"", "nivel": "Secundaria", "localidad": "Chametla", "colonia": "Chametla", "mat": 129, "disc": 2, "tras": 4, "leng": 0, "apt": 1, "aulas": 6, "gm": "Bajo", "pob": 2675.0, "analf": 21.4, "salud": 19.0, "drenaje": 1.0, "agua": 1.0, "piso": 1.2, "hac": 12.7, "refri": 2.5, "internet": 29.1, "celular": 3.0}, {"nombre": "Telesecundaria No. 49 \"José Evodio Balderas González\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "Agua Escondida", "mat": 141, "disc": 6, "tras": 7, "leng": 0, "apt": 0, "aulas": 6, "gm": "Medio", "pob": 1478.0, "analf": 28.9, "salud": 14.3, "drenaje": 0.1, "agua": 2.4, "piso": 5.4, "hac": 28.9, "refri": 4.2, "internet": 37.3, "celular": 3.1}, {"nombre": "Escuela Secundaria \"Rafael Ramírez\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "Lienzo Charro", "mat": 454, "disc": 3, "tras": 8, "leng": 0, "apt": 0, "aulas": 20, "gm": "Bajo", "pob": 1458.0, "analf": 25.8, "salud": 13.0, "drenaje": 0.0, "agua": 0.1, "piso": 1.4, "hac": 18.3, "refri": 2.2, "internet": 26.6, "celular": 5.4}, {"nombre": "Escuela Secundaria Técnica No. 1 \"Profr. Concepción Casillas Seguame\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "Vicente Guerrero", "mat": 647, "disc": 4, "tras": 12, "leng": 0, "apt": 0, "aulas": 18, "gm": "Bajo", "pob": 8317.0, "analf": 23.0, "salud": 13.5, "drenaje": 0.1, "agua": 0.2, "piso": 0.9, "hac": 15.9, "refri": 2.2, "internet": 26.1, "celular": 5.0}, {"nombre": "Escuela Secundaria Técnica No. 10", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "8 de Octubre 2da. Sección", "mat": 110, "disc": 0, "tras": 1, "leng": 0, "apt": 1, "aulas": 18, "gm": "Bajo", "pob": 1466.0, "analf": 23.5, "salud": 10.2, "drenaje": 0.0, "agua": 0.1, "piso": 0.2, "hac": 18.2, "refri": 2.5, "internet": 23.2, "celular": 3.9}, {"nombre": "Escuela Secundaria \"José Vasconcelos\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "Diana Laura", "mat": 980, "disc": 11, "tras": 5, "leng": 0, "apt": 3, "aulas": 16, "gm": "Bajo", "pob": 5687.0, "analf": 19.7, "salud": 15.9, "drenaje": 0.0, "agua": 0.2, "piso": 2.3, "hac": 19.0, "refri": 2.6, "internet": 22.7, "celular": 2.5}, {"nombre": "Escuela Secundaria \"José María Garma González\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "El Centenario (localidad)", "mat": 278, "disc": 2, "tras": 4, "leng": 0, "apt": 0, "aulas": 12, "gm": "Bajo", "pob": 4657.0, "analf": 25.9, "salud": 16.8, "drenaje": 0.2, "agua": 1.1, "piso": 2.3, "hac": 22.8, "refri": 2.8, "internet": 40.1, "celular": 5.2}, {"nombre": "Escuela Secundaria General \"Humberto Muñoz Zazueta\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "Revolución", "mat": 553, "disc": 3, "tras": 12, "leng": 0, "apt": 0, "aulas": 21, "gm": "Bajo", "pob": 1514.0, "analf": 19.6, "salud": 13.8, "drenaje": 0.0, "agua": 0.0, "piso": 3.9, "hac": 17.4, "refri": 1.6, "internet": 22.5, "celular": 2.9}, {"nombre": "Escuela Secundaria \"Gabriel Francisco Ojeda Agúndez\"", "nivel": "Secundaria", "localidad": "La Paz", "colonia": "El Esterito", "mat": 560, "disc": 5, "tras": 4, "leng": 0, "apt": 1, "aulas": 18, "gm": "Bajo", "pob": 3236.0, "analf": 17.7, "salud": 13.3, "drenaje": 0.0, "agua": 0.3, "piso": 0.9, "hac": 10.2, "refri": 2.2, "internet": 20.7, "celular": 6.5}];
+  const GM_HEX = {'Muy bajo':'#2e7d6f','Bajo':'#7cb342','Medio':'#c9a84c','Alto':'#d98324','Muy alto':'#8c2a3e'};
+  let estado = { f:'all', q:'', sel:null };
+  const norm = s => (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const fInt = n => n==null ? 's/d' : Number(n).toLocaleString('es-MX');
+  const f1 = n => n==null ? 's/d' : Number(n).toLocaleString('es-MX',{minimumFractionDigits:1,maximumFractionDigits:1});
+
+  const elLista = document.getElementById('expLista');
+  const elDet = document.getElementById('expDetalle');
+  const elConteo = document.getElementById('expConteo');
+
+  function filtrar(){
+    return DATA.filter(d=>{
+      if(estado.f!=='all' && d.nivel!==estado.f) return false;
+      if(estado.q){ const q=norm(estado.q); if(!norm(d.nombre).includes(q) && !norm(d.colonia).includes(q)) return false; }
+      return true;
+    });
+  }
+  function pintarLista(){
+    const arr = filtrar();
+    elConteo.textContent = arr.length + ' escuela' + (arr.length!==1?'s':'');
+    elLista.innerHTML = arr.map(d=>{
+      const i = DATA.indexOf(d);
+      const col = GM_HEX[d.gm] || '#bbb';
+      return '<div class="exp-item '+(estado.sel===i?'seleccionado':'')+'" data-i="'+i+'">'+
+        '<span class="exp-punto" style="background:'+col+'"></span>'+
+        '<div class="exp-item-cont"><div class="exp-item-nombre">'+d.nombre+'</div>'+
+        '<div class="exp-item-sub">'+d.colonia+' · marg. '+(d.gm||'s/d')+'</div></div>'+
+        '<span class="exp-nivel-tag exp-nivel-'+d.nivel+'">'+d.nivel.slice(0,4)+'</span></div>';
+    }).join('');
+    elLista.querySelectorAll('.exp-item').forEach(el=>{
+      el.onclick = ()=>{ estado.sel = +el.dataset.i; pintarLista(); pintarDetalle(); };
+    });
+  }
+  function barra(label, val){
+    const v = val==null ? 0 : val;
+    const pct = Math.min(100, (v/60)*100);
+    const color = v<10?'#2e7d6f': v<25?'#7cb342': v<40?'#c9a84c':'#d98324';
+    return '<div class="exp-ind"><div class="exp-ind-top"><span class="exp-lab">'+label+'</span>'+
+      '<span class="exp-val">'+f1(val)+'%</span></div>'+
+      '<div class="exp-track"><div class="exp-fill" style="width:'+pct+'%;background:'+color+'"></div></div></div>';
+  }
+  function pintarDetalle(){
+    const d = DATA[estado.sel]; if(d==null) return;
+    const gmcol = GM_HEX[d.gm] || '#999';
+    elDet.innerHTML =
+      '<div class="exp-dhead"><h3>'+d.nombre+'</h3>'+
+      '<div class="exp-meta">'+d.nivel+' · Colonia '+d.colonia+' · '+d.localidad+', B.C.S.</div>'+
+      '<span class="exp-gmtag" style="background:'+gmcol+'">Marginación '+(d.gm||'s/d')+' (CONAPO 2020)</span></div>'+
+      '<div class="exp-seccion exp-sec-escuela"><div class="exp-sec-titulo"><span class="exp-sbar"></span>Características de la escuela <span class="exp-sec-nota">· Formato 911, inicio 2024-2025</span></div>'+
+      '<div class="exp-grid">'+
+        stat(fInt(d.mat),'Matrícula total')+
+        stat(fInt(d.aulas),'Aulas existentes')+
+        stat(fInt(d.disc),'Con discapacidad')+
+        stat(fInt(d.tras),'Con trastorno (TEA+TDAH)')+
+        stat(fInt(d.leng),'Hablantes lengua indígena')+
+        stat(fInt(d.apt),'Aptitudes sobresalientes')+
+      '</div></div>'+
+      '<div class="exp-seccion exp-sec-contexto"><div class="exp-sec-titulo"><span class="exp-sbar"></span>Características del contexto · colonia <span class="exp-sec-nota">· CONAPO 2020'+(d.pob!=null?' · '+fInt(Math.round(d.pob))+' hab.':'')+'</span></div>'+
+      barra('Población analfabeta', d.analf)+
+      barra('Sin derechohabiencia a servicios de salud', d.salud)+
+      barra('Viviendas con hacinamiento', d.hac)+
+      barra('Viviendas sin internet', d.internet)+
+      barra('Viviendas sin agua entubada', d.agua)+
+      barra('Viviendas sin drenaje ni excusado', d.drenaje)+
+      barra('Viviendas con piso de tierra', d.piso)+
+      barra('Viviendas sin refrigerador', d.refri)+
+      barra('Viviendas sin celular', d.celular)+
+      '</div>'+
+      '<div class="exp-foot">Las barras indican el porcentaje de carencia en la colonia; los tonos más cálidos señalan mayor rezago. "s/d" = sin dato disponible.</div>';
+  }
+  function stat(v,l){ return '<div class="exp-stat"><div class="exp-v">'+v+'</div><div class="exp-l">'+l+'</div></div>'; }
+
+  document.getElementById('expBuscar').oninput = e=>{ estado.q = e.target.value; pintarLista(); };
+  document.querySelectorAll('#expFiltros .exp-chip').forEach(c=>{
+    c.onclick = ()=>{
+      document.querySelectorAll('#expFiltros .exp-chip').forEach(x=>x.classList.remove('activo'));
+      c.classList.add('activo'); estado.f = c.dataset.f; pintarLista();
+    };
+  });
+  pintarLista();
+})();
+</script>
 
 </body>
 </html>
