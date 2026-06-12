@@ -1482,6 +1482,7 @@ function renderTarjetas(docs) {
         </div>
       </div>
       ${d["Liga"] ? `<div class="card-actions">
+        <a class="btn-ver" href="${d["Liga"]}" target="_blank" rel="noopener">Ver documento</a>
         ${d["Resumen"] ? `<button class="btn-ver" style="background:white; color:#1a4a80; border:1.5px solid #1a4a80; cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarResumen(${allDocs.indexOf(d)})">Resumen</button>` : ""}
         <button class="btn-ver" style="background:white; color:#1a6b3a; border:1.5px solid #1a6b3a; cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarSolicitud(${allDocs.indexOf(d)})">Solicitar documento</button>
         <button class="btn-ver" style="background:white; color:var(--vino); border:1.5px solid var(--vino); cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarAPA(${allDocs.indexOf(d)})">Referencia APA7</button>
