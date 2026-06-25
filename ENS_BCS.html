@@ -806,6 +806,10 @@ mark {
       </div>
       <button onclick="cerrarSolicitud()" style="margin-left:auto; background:none; border:none; font-size:18px; cursor:pointer; color:var(--texto-suave);">✕</button>
     </div>
+    <div style="background:#fdf7e6; border:1px solid var(--dorado); border-radius:10px; padding:9px 14px; margin-bottom:1rem; font-size:11.5px; line-height:1.4; color:#7a5c12; display:flex; align-items:center; gap:8px;">
+      <span style="font-size:14px; flex-shrink:0;">ℹ️</span>
+      <span>Esta solicitud está dirigida exclusivamente a <strong>estudiantes y docentes normalistas</strong>.</span>
+    </div>
     <div style="background:#f5f9f6; border:1px solid #c8e6c9; border-radius:10px; padding:10px 14px; margin-bottom:1rem; max-height:120px; overflow-y:auto;">
       <div style="font-size:11px; color:#555; margin-bottom:4px;">Documento(s) solicitado(s):</div>
       <div style="font-size:13px; font-weight:500; color:var(--texto);" id="solicitudTitulo"></div>
@@ -1482,7 +1486,6 @@ function renderTarjetas(docs) {
         </div>
       </div>
       ${d["Liga"] ? `<div class="card-actions">
-        <a class="btn-ver" href="${d["Liga"]}" target="_blank" rel="noopener">Ver documento</a>
         ${d["Resumen"] ? `<button class="btn-ver" style="background:white; color:#1a4a80; border:1.5px solid #1a4a80; cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarResumen(${allDocs.indexOf(d)})">Resumen</button>` : ""}
         <button class="btn-ver" style="background:white; color:#1a6b3a; border:1.5px solid #1a6b3a; cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarSolicitud(${allDocs.indexOf(d)})">Solicitar documento</button>
         <button class="btn-ver" style="background:white; color:var(--vino); border:1.5px solid var(--vino); cursor:pointer; margin-top:6px; font-size:11px;" onclick="mostrarAPA(${allDocs.indexOf(d)})">Referencia APA7</button>
