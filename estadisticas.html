@@ -456,13 +456,11 @@ function render() {
 function poblarResumen() {
   const total = allDocs.length;
   const sedes = new Set(allDocs.map(d => d["Sede"]).filter(Boolean)).size;
-  const programas = new Set(allDocs.map(d => d["Programa de estudio"]).filter(Boolean)).size;
   const anios = [...new Set(allDocs.map(d => d["Año"]).filter(Boolean))];
   const rango = anios.length ? `${Math.min(...anios)}–${Math.max(...anios)}` : "—";
   document.getElementById("resumenCards").innerHTML = `
     <div class="resumen-card"><div class="resumen-num">${total}</div><div class="resumen-label">Documentos totales</div></div>
     <div class="resumen-card"><div class="resumen-num">${sedes}</div><div class="resumen-label">Sedes</div></div>
-    <div class="resumen-card"><div class="resumen-num">${programas}</div><div class="resumen-label">Programas de estudio</div></div>
     <div class="resumen-card"><div class="resumen-num">${rango}</div><div class="resumen-label">Años cubiertos</div></div>`;
 }
 
