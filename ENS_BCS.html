@@ -1091,21 +1091,44 @@ let allDocs = [];
 let filtroRapidoActivo = "";
 
 function parseCSV(text) {
-  const lines = text.split("\n");
-  const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, "").trim());
-  return lines.slice(1).filter(l => l.trim()).map(line => {
-    const values = [];
-    let cur = "", inQ = false;
-    for (let c of line) {
-      if (c === '"') { inQ = !inQ; }
-      else if (c === ',' && !inQ) { values.push(cur.trim()); cur = ""; }
-      else cur += c;
+  // Parser robusto: procesa todo el texto carácter por carácter,
+  // respetando comillas, comas internas, saltos de línea dentro de celdas
+  // y comillas dobles escapadas ("").
+  const filas = [];
+  let campo = "";
+  let fila = [];
+  let inQ = false;
+  // Normalizar saltos de línea de Windows (\r\n) y Mac (\r) a \n
+  text = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQ) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { campo += '"'; i++; } // comilla escapada
+        else { inQ = false; }
+      } else {
+        campo += c;
+      }
+    } else {
+      if (c === '"') { inQ = true; }
+      else if (c === ',') { fila.push(campo); campo = ""; }
+      else if (c === '\n') { fila.push(campo); filas.push(fila); fila = []; campo = ""; }
+      else { campo += c; }
     }
-    values.push(cur.trim());
-    const obj = {};
-    headers.forEach((h, i) => { obj[h] = (values[i] || "").replace(/^"|"$/g, "").trim(); });
-    return obj;
-  });
+  }
+  // Último campo/fila si el archivo no termina en salto de línea
+  if (campo !== "" || fila.length > 0) { fila.push(campo); filas.push(fila); }
+
+  if (filas.length === 0) return [];
+  const headers = filas[0].map(h => h.trim());
+  return filas.slice(1)
+    .filter(f => f.some(v => v.trim() !== "")) // descartar filas totalmente vacías
+    .map(f => {
+      const obj = {};
+      headers.forEach((h, idx) => { obj[h] = (f[idx] || "").trim(); });
+      return obj;
+    });
 }
 
 function normalizar(texto) {
