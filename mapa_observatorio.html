@@ -196,7 +196,7 @@ body {
 
 .mapa-layout {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 300px;
   gap: 1rem;
   align-items: start;
 }
@@ -212,6 +212,134 @@ body {
 }
 
 .mapa-frame iframe { width: 100%; height: 100%; border: none; }
+
+/* ── PANEL LATERAL (Buscar / Filtros / Simbología) ── */
+.panel-lateral {
+  height: calc(100vh - 100px);
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+.panel-tabs {
+  display: flex;
+  background: var(--vino-oscuro);
+  flex: none;
+}
+
+.panel-tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.65);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 12px 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  border-bottom: 2px solid transparent;
+}
+
+.panel-tab:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+.panel-tab.activo {
+  color: var(--dorado);
+  background: rgba(201,168,76,0.1);
+  border-bottom: 2px solid var(--dorado);
+  font-weight: 600;
+}
+
+.panel-contenido {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+}
+
+.panel-vista { display: none; }
+.panel-vista.activo { display: block; }
+
+/* Buscar */
+.panel-buscar-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  background: var(--crema);
+  transition: 0.15s;
+}
+.panel-buscar-input:focus { border-color: var(--vino-claro); background: var(--blanco); box-shadow: 0 0 0 3px rgba(140,42,62,0.1); }
+
+.panel-sugerencias { margin-top: 8px; }
+.panel-sug-item {
+  padding: 8px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.12s;
+}
+.panel-sug-item:hover { background: var(--crema); }
+
+.panel-buscar-hint { font-size: 11px; color: var(--texto-suave); margin-top: 10px; line-height: 1.5; }
+
+/* Filtros */
+.filtro-grupo { margin-bottom: 16px; }
+.filtro-grupo:last-child { margin-bottom: 0; }
+.filtro-titulo {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-suave);
+  margin-bottom: 8px;
+}
+.filtro-opcion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 4px;
+  font-size: 12.5px;
+  color: var(--texto);
+  cursor: pointer;
+}
+.filtro-opcion input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--vino); cursor: pointer; flex: none; }
+.filtro-opcion .punto { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.filtro-opcion .cuadro { width: 10px; height: 10px; flex: none; }
+.filtro-nota {
+  font-size: 10.5px;
+  color: var(--texto-suave);
+  line-height: 1.5;
+  background: var(--crema);
+  border-radius: 8px;
+  padding: 9px 10px;
+  margin-top: 4px;
+}
+
+/* Simbología */
+.simb-grupo { margin-bottom: 16px; }
+.simb-grupo:last-child { margin-bottom: 0; }
+.simb-titulo {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-suave);
+  margin-bottom: 8px;
+}
+.simb-fila { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--texto); margin-bottom: 6px; }
+.simb-fila:last-child { margin-bottom: 0; }
+.simb-marca { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.simb-marca.circulo { border-radius: 50%; }
 
 .diccionario-panel {
   display: flex;
@@ -265,6 +393,7 @@ body {
   .mapa-contenedor { padding: 0.75rem 1rem; }
   .mapa-layout { grid-template-columns: 1fr; }
   .mapa-frame { height: 60vh; min-height: 350px; }
+  .panel-lateral { height: 50vh; min-height: 320px; }
   .diccionario-img { height: auto; max-height: 500px; }
 }
 .footer {
@@ -453,6 +582,79 @@ body {
   <div class="mapa-layout">
     <div class="mapa-frame">
       <div id="mapaLeaflet" style="width:100%; height:100%;"></div>
+    </div>
+
+    <div class="panel-lateral">
+      <div class="panel-tabs">
+        <button class="panel-tab activo" data-panel="buscar" type="button">Buscar</button>
+        <button class="panel-tab" data-panel="filtros" type="button">Filtros</button>
+        <button class="panel-tab" data-panel="simbologia" type="button">Simbología</button>
+      </div>
+
+      <div class="panel-contenido">
+
+        <!-- BUSCAR -->
+        <div class="panel-vista activo" id="panel-buscar">
+          <input id="busca" type="text" class="panel-buscar-input" placeholder="Buscar escuela o colonia..." autocomplete="off">
+          <div id="sugerencias" class="panel-sugerencias"></div>
+          <div class="panel-buscar-hint">Escribe al menos 2 letras del nombre de una escuela o colonia para ver sugerencias.</div>
+        </div>
+
+        <!-- FILTROS -->
+        <div class="panel-vista" id="panel-filtros">
+          <div class="filtro-grupo">
+            <div class="filtro-titulo">Escuelas primarias</div>
+            <label class="filtro-opcion">
+              <input type="checkbox" data-capa="urbanas">
+              <span class="punto" style="background:#c9a84c;border:1.5px solid #2e7d6f;"></span>
+              Urbano
+            </label>
+            <label class="filtro-opcion">
+              <input type="checkbox" data-capa="rurales">
+              <span class="punto" style="background:#c9a84c;border:1.5px solid #a37d1a;"></span>
+              Rural
+            </label>
+          </div>
+          <div class="filtro-grupo">
+            <div class="filtro-titulo">Contexto</div>
+            <label class="filtro-opcion">
+              <input type="checkbox" data-capa="colonias">
+              <span class="cuadro" style="background:#4a0f1c;"></span>
+              Colonias (marginación)
+            </label>
+          </div>
+          <div class="filtro-grupo">
+            <div class="filtro-titulo">Escuelas Normales</div>
+            <label class="filtro-opcion">
+              <input type="checkbox" data-capa="normales" checked>
+              <span class="punto" style="background:#6b1a2a;border:2px solid #c9a84c;"></span>
+              Escuelas Normales
+            </label>
+          </div>
+          <div class="filtro-nota"><b>Nota:</b> el ámbito urbano/rural de las escuelas primarias es una aproximación espacial: se considera urbana si cae dentro de un polígono de colonia (sin importar su marginación) o a 1 km o menos del polígono más cercano; se considera rural si está a más de 1 km de cualquier colonia (localidad dispersa).</div>
+        </div>
+
+        <!-- SIMBOLOGÍA -->
+        <div class="panel-vista" id="panel-simbologia">
+          <div class="simb-grupo">
+            <div class="simb-titulo">Grado de marginación</div>
+            <div class="simb-fila"><span class="simb-marca" style="background:#2c7fb8;"></span>Muy bajo</div>
+            <div class="simb-fila"><span class="simb-marca" style="background:#7fcdbb;"></span>Bajo</div>
+            <div class="simb-fila"><span class="simb-marca" style="background:#fed976;"></span>Medio</div>
+            <div class="simb-fila"><span class="simb-marca" style="background:#fd8d3c;"></span>Alto</div>
+            <div class="simb-fila"><span class="simb-marca" style="background:#e31a1c;"></span>Muy alto</div>
+          </div>
+          <div class="simb-grupo">
+            <div class="simb-titulo">Escuelas primarias</div>
+            <div class="simb-fila"><span class="simb-marca circulo" style="background:#c9a84c;border:1.5px solid #6b1a2a;"></span>Escuela primaria</div>
+          </div>
+          <div class="simb-grupo">
+            <div class="simb-titulo">Escuelas normales</div>
+            <div class="simb-fila"><span class="simb-marca circulo" style="background:#6b1a2a;border:2px solid #c9a84c;"></span>Escuela Normal</div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
@@ -657,6 +859,116 @@ const ESCUELAS_PRIM = {"type":"FeatureCollection","features":[{"type":"Feature",
 
   const COLOR_GM = {'Muy bajo':'#2c7fb8','Bajo':'#7fcdbb','Medio':'#fed976','Alto':'#fd8d3c','Muy alto':'#e31a1c'};
 
+  // ---- ÁMBITO URBANO / RURAL (aproximado por estructura de colonia + buffer) ----
+  // Nota metodológica: no existe un campo de ámbito en los datos originales.
+  // Se aproxima ÚNICAMENTE por geometría: si el punto de la escuela cae
+  // dentro de CUALQUIER polígono de colonia (sin importar su grado de
+  // marginación) se considera URBANO, porque la existencia de una colonia
+  // trazada (manzanas/AGEB) es en sí misma la señal de urbanización.
+  // La marginación (gm_2020) mide pobreza, NO ruralidad — una colonia con
+  // marginación Alta sigue siendo parte de la ciudad, no es rural.
+  //   · Escuela dentro de algún polígono de colonia → URBANO
+  //   · Escuela fuera de todo polígono, pero a ≤1 km del polígono de
+  //     colonia más cercano (borde de la mancha urbana) → URBANO
+  //   · Escuela a más de 1 km de cualquier colonia (localidad dispersa,
+  //     sin trazado de manzanas/colonias) → RURAL
+  const BUFFER_URBANO_M = 1000;
+
+  function normTxt(s){
+    return (s||'').toString().trim().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/\s+/g,' ').replace(/[^a-z0-9 ]/g,'').trim();
+  }
+
+  // Ray-casting: ¿el punto [lng,lat] está dentro del anillo de coordenadas?
+  function puntoEnAnillo(pt, anillo){
+    let dentro = false;
+    for(let i=0, j=anillo.length-1; i<anillo.length; j=i++){
+      const xi=anillo[i][0], yi=anillo[i][1];
+      const xj=anillo[j][0], yj=anillo[j][1];
+      const cruza = ((yi>pt[1]) !== (yj>pt[1])) &&
+        (pt[0] < (xj-xi)*(pt[1]-yi)/(yj-yi)+xi);
+      if(cruza) dentro = !dentro;
+    }
+    return dentro;
+  }
+  function puntoEnPoligono(pt, geometry){
+    if(!geometry) return false;
+    const anillosDePoligono = poly => {
+      if(!puntoEnAnillo(pt, poly[0])) return false;
+      for(let k=1;k<poly.length;k++){ if(puntoEnAnillo(pt, poly[k])) return false; } // huecos
+      return true;
+    };
+    if(geometry.type === 'Polygon') return anillosDePoligono(geometry.coordinates);
+    if(geometry.type === 'MultiPolygon') return geometry.coordinates.some(anillosDePoligono);
+    return false;
+  }
+
+  // Distancia mínima (metros) de un punto a un segmento, en un plano local
+  // proyectado con metros-por-grado ajustado a la latitud del punto.
+  function metrosPorGrado(latDeg){
+    const lat = latDeg * Math.PI/180;
+    return { x: 111320*Math.cos(lat), y: 110540 };
+  }
+  function distPuntoSegmento(px,py, ax,ay, bx,by){
+    const dx=bx-ax, dy=by-ay;
+    const len2 = dx*dx+dy*dy;
+    let t = len2>0 ? ((px-ax)*dx+(py-ay)*dy)/len2 : 0;
+    t = Math.max(0, Math.min(1, t));
+    const cx = ax+t*dx, cy = ay+t*dy;
+    return Math.hypot(px-cx, py-cy);
+  }
+  function distanciaMinAPoligonoMetros(pt, geometry){
+    if(!geometry) return Infinity;
+    const m = metrosPorGrado(pt[1]);
+    const px = pt[0]*m.x, py = pt[1]*m.y;
+    let min = Infinity;
+    const procesarAnillo = anillo => {
+      for(let i=0;i<anillo.length-1;i++){
+        const ax=anillo[i][0]*m.x, ay=anillo[i][1]*m.y;
+        const bx=anillo[i+1][0]*m.x, by=anillo[i+1][1]*m.y;
+        const d = distPuntoSegmento(px,py,ax,ay,bx,by);
+        if(d<min) min=d;
+      }
+    };
+    if(geometry.type==='Polygon'){
+      geometry.coordinates.forEach(procesarAnillo);
+    } else if(geometry.type==='MultiPolygon'){
+      geometry.coordinates.forEach(poly=>poly.forEach(procesarAnillo));
+    }
+    return min;
+  }
+
+  const AMBITO_CACHE = {};
+  function ambitoDeEscuela(feature){
+    const p = feature.properties;
+    const coords = feature.geometry.coordinates;
+    const clave = p.CCT || coords.join(',');
+    if(AMBITO_CACHE[clave]) return AMBITO_CACHE[clave];
+
+    let dentro = false, mejorDist = Infinity, mejorColonia = null, mejorGm = null;
+    for(let i=0;i<COLONIAS_BCS.features.length;i++){
+      const cf = COLONIAS_BCS.features[i];
+      if(puntoEnPoligono(coords, cf.geometry)){
+        dentro = true; mejorDist = 0; mejorColonia = cf.properties.colonia; mejorGm = cf.properties.gm_2020;
+        break; // ya está dentro de una colonia, no hace falta seguir buscando
+      }
+      const d = distanciaMinAPoligonoMetros(coords, cf.geometry);
+      if(d < mejorDist){ mejorDist = d; mejorColonia = cf.properties.colonia; mejorGm = cf.properties.gm_2020; }
+    }
+
+    let resultado;
+    if(dentro){
+      resultado = { ambito:'urbano', gm:mejorGm, colonia:mejorColonia, distancia:0 };
+    } else if(mejorDist <= BUFFER_URBANO_M){
+      resultado = { ambito:'urbano', gm:mejorGm, colonia:mejorColonia, distancia:Math.round(mejorDist) };
+    } else {
+      resultado = { ambito:'rural', gm:null, colonia:null, distancia: isFinite(mejorDist)?Math.round(mejorDist):null };
+    }
+    AMBITO_CACHE[clave] = resultado;
+    return resultado;
+  }
+
   // ---- POPUP COLONIA ----
   function popupColonia(p){
     function fila(e,v,s){ if(v===null||v===undefined||v==='')v='—'; else if(s)v=v+s;
@@ -684,14 +996,19 @@ const ESCUELAS_PRIM = {"type":"FeatureCollection","features":[{"type":"Feature",
   }
 
   // ---- POPUP ESCUELA ----
-  function popupEscuela(p){
+  function popupEscuela(feature){
+    const p = feature.properties;
     function fila(e,v){ if(v===null||v===undefined||v==='')v='—';
       return '<tr><td style="padding:2px 8px 2px 0;color:#5a5a5a;font-size:11px;">'+e+'</td><td style="padding:2px 0;font-weight:600;font-size:11px;color:#1c1c1c;">'+v+'</td></tr>';}
+    const amb = ambitoDeEscuela(feature);
+    const ambLabel = amb.ambito==='urbano' ? 'Urbano' : 'Rural';
+    const ambColor = amb.ambito==='urbano' ? '#2e7d6f' : '#a37d1a';
     return '<div style="font-family:DM Sans,sans-serif;min-width:230px;">'+
       '<div style="background:#6b1a2a;color:#fff;margin:-13px -19px 8px -19px;padding:9px 14px;border-radius:12px 12px 0 0;">'+
         '<div style="font-size:12.5px;font-weight:600;line-height:1.3;">'+(p.NOMBRE||'Sin nombre')+'</div>'+
         '<div style="font-size:9.5px;opacity:0.75;margin-top:2px;letter-spacing:0.03em;">CCT: '+(p.CCT||'—')+'</div>'+
         '<div style="font-size:10px;opacity:0.8;margin-top:1px;">'+(p.TURNO||'')+'</div></div>'+
+      '<div style="display:inline-block;padding:2px 10px;border-radius:99px;background:'+ambColor+';color:#fff;font-size:10.5px;font-weight:600;margin-bottom:8px;">Ámbito (aprox.): '+ambLabel+(amb.colonia?(' · colonia '+(amb.distancia>0?'cercana ':'')+amb.colonia+(amb.gm?' ('+amb.gm+')':'')+(amb.distancia>0?' · '+amb.distancia+' m':'')):(amb.distancia!=null?' · a '+amb.distancia+' m de la colonia más cercana':' · sin colonia cercana'))+'</div>'+
       '<table style="border-collapse:collapse;width:100%;">'+
         fila('Municipio',p.NOM_MUN)+
         fila('Localidad',p.NOM_LOC)+
@@ -718,17 +1035,23 @@ const ESCUELAS_PRIM = {"type":"FeatureCollection","features":[{"type":"Feature",
     }
   });
 
-  // ---- CAPA ESCUELAS ----
+  // ---- CAPA ESCUELAS (dividida en urbano / rural) ----
   const marcadores = {};
-  const capaEscuelas = L.geoJSON(ESCUELAS_PRIM, {
+  const opcionesEscuela = {
     pointToLayer: (f,ll) => L.circleMarker(ll,{pane:'paneEscuelas',radius:6,fillColor:'#c9a84c',color:'#6b1a2a',weight:1.5,opacity:1,fillOpacity:0.9}),
     onEachFeature: (f,l) => {
-      l.bindPopup(popupEscuela(f.properties));
+      l.bindPopup(popupEscuela(f));
       l.on('mouseover',function(){this.setStyle({radius:8,fillColor:'#8c2a3e'});});
       l.on('mouseout',function(){this.setStyle({radius:6,fillColor:'#c9a84c'});});
       marcadores['E|'+(f.properties.NOMBRE||'')] = {layer:l, tipo:'escuela'};
     }
-  });
+  };
+  const capaEscuelasUrbanas = L.geoJSON(ESCUELAS_PRIM, Object.assign({}, opcionesEscuela, {
+    filter: f => ambitoDeEscuela(f).ambito === 'urbano'
+  }));
+  const capaEscuelasRurales = L.geoJSON(ESCUELAS_PRIM, Object.assign({}, opcionesEscuela, {
+    filter: f => ambitoDeEscuela(f).ambito === 'rural'
+  }));
 
   // Guardar refs de colonias para búsqueda
   capaColonias.eachLayer(function(l){
@@ -770,42 +1093,37 @@ const ESCUELAS_PRIM = {"type":"FeatureCollection","features":[{"type":"Feature",
 
   mapa.fitBounds(capaNormales.getBounds(), {padding:[60,60]});
 
-  // ---- CONTROL DE CAPAS (prender/apagar) ----
-  const overlays = {
-    '<span style=\'color:#6b1a2a;font-weight:600;\'>● Escuelas primarias</span>': capaEscuelas,
-    '<span style=\'color:#4a0f1c;font-weight:600;\'>▧ Colonias (marginación)</span>': capaColonias,
-    '<span style=\'color:#a37d1a;font-weight:600;\'>◉ Escuelas Normales</span>': capaNormales
-  };
-  L.control.layers(null, overlays, {collapsed:false, position:'topright'}).addTo(mapa);
+  // Al cargar, solo la capa de Escuelas Normales está activa.
+  // Las demás (urbano, rural, colonias) se prenden desde la pestaña "Filtros".
 
-  // ---- LEYENDA ----
-  const leyenda = L.control({position:'bottomright'});
-  leyenda.onAdd = function(){
-    const d = L.DomUtil.create('div');
-    d.style.cssText='background:#fff;padding:10px 12px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.2);font-family:DM Sans,sans-serif;font-size:11px;line-height:1.6;';
-    d.innerHTML='<div style="font-weight:600;color:#4a0f1c;margin-bottom:5px;">Grado de marginación</div>'+
-      '<div><span style="display:inline-block;width:12px;height:12px;background:#2c7fb8;border-radius:2px;margin-right:6px;"></span>Muy bajo</div>'+
-      '<div><span style="display:inline-block;width:12px;height:12px;background:#7fcdbb;border-radius:2px;margin-right:6px;"></span>Bajo</div>'+
-      '<div><span style="display:inline-block;width:12px;height:12px;background:#fed976;border-radius:2px;margin-right:6px;"></span>Medio</div>'+
-      '<div><span style="display:inline-block;width:12px;height:12px;background:#fd8d3c;border-radius:2px;margin-right:6px;"></span>Alto</div>'+
-      '<div><span style="display:inline-block;width:12px;height:12px;background:#e31a1c;border-radius:2px;margin-right:6px;"></span>Muy alto</div>'+
-      '<div style="margin-top:6px;"><span style="display:inline-block;width:10px;height:10px;background:#c9a84c;border:1.5px solid #6b1a2a;border-radius:50%;margin-right:6px;"></span>Escuela primaria</div>'+'<div><span style="display:inline-block;width:10px;height:10px;background:#6b1a2a;border:2px solid #c9a84c;border-radius:50%;margin-right:6px;"></span>Escuela Normal</div>';
-    return d;
-  };
-  leyenda.addTo(mapa);
+  // ---- PANEL LATERAL: pestañas ----
+  const tabs = document.querySelectorAll('.panel-tab');
+  const vistas = document.querySelectorAll('.panel-vista');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(t => t.classList.remove('activo'));
+      vistas.forEach(v => v.classList.remove('activo'));
+      tab.classList.add('activo');
+      document.getElementById('panel-'+tab.dataset.panel).classList.add('activo');
+    });
+  });
 
-  // ---- BUSCADOR ----
-  const buscador = L.control({position:'topleft'});
-  buscador.onAdd = function(){
-    const d = L.DomUtil.create('div');
-    d.style.cssText='background:#fff;padding:6px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.2);';
-    d.innerHTML='<input id="busca" type="text" placeholder="Buscar escuela o colonia..." autocomplete="off" style="width:230px;padding:7px 10px;border:1px solid #e0d8d0;border-radius:6px;font-size:12px;font-family:DM Sans,sans-serif;outline:none;"><div id="sugerencias" style="max-height:200px;overflow-y:auto;"></div>';
-    L.DomEvent.disableClickPropagation(d);
-    L.DomEvent.disableScrollPropagation(d);
-    return d;
+  // ---- PANEL LATERAL: filtros de capas ----
+  const CAPAS = {
+    urbanas: capaEscuelasUrbanas,
+    rurales: capaEscuelasRurales,
+    colonias: capaColonias,
+    normales: capaNormales
   };
-  buscador.addTo(mapa);
+  document.querySelectorAll('.filtro-opcion input[type="checkbox"]').forEach(function(chk){
+    chk.addEventListener('change', function(){
+      const capa = CAPAS[chk.dataset.capa];
+      if(!capa) return;
+      if(chk.checked) mapa.addLayer(capa); else mapa.removeLayer(capa);
+    });
+  });
 
+  // ---- PANEL LATERAL: buscador ----
   const claves = Object.keys(marcadores);
   const input = document.getElementById('busca');
   const sug = document.getElementById('sugerencias');
@@ -819,14 +1137,28 @@ const ESCUELAS_PRIM = {"type":"FeatureCollection","features":[{"type":"Feature",
       const tipo = k[0]==='E'?'escuela':'colonia';
       const nombre = k.slice(2);
       const item = document.createElement('div');
-      item.style.cssText='padding:6px 10px;font-size:12px;cursor:pointer;border-top:1px solid #f0e8e2;font-family:DM Sans,sans-serif;';
+      item.className = 'panel-sug-item';
       item.innerHTML='<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+(tipo==='escuela'?'#c9a84c':'#8c2a3e')+';margin-right:6px;"></span>'+nombre+' <span style="color:#9a9a9a;font-size:10px;">('+tipo+')</span>';
-      item.onmouseover=()=>item.style.background='#faf7f4';
-      item.onmouseout=()=>item.style.background='#fff';
       item.onclick=function(){
         const m = marcadores[k];
-        if(m.tipo==='escuela'){ mapa.setView(m.layer.getLatLng(),16); m.layer.openPopup(); }
-        else { mapa.fitBounds(m.layer.getBounds()); m.layer.openPopup(); }
+        // Si la escuela pertenece a una capa apagada, la prendemos y marcamos su checkbox.
+        if(m.tipo==='escuela'){
+          const amb = ambitoDeEscuela(m.layer.feature).ambito;
+          const capa = amb==='urbano' ? capaEscuelasUrbanas : capaEscuelasRurales;
+          if(!mapa.hasLayer(capa)){
+            mapa.addLayer(capa);
+            const chk = document.querySelector('.filtro-opcion input[data-capa="'+(amb==='urbano'?'urbanas':'rurales')+'"]');
+            if(chk) chk.checked = true;
+          }
+          mapa.setView(m.layer.getLatLng(),16); m.layer.openPopup();
+        } else {
+          if(!mapa.hasLayer(capaColonias)){
+            mapa.addLayer(capaColonias);
+            const chk = document.querySelector('.filtro-opcion input[data-capa="colonias"]');
+            if(chk) chk.checked = true;
+          }
+          mapa.fitBounds(m.layer.getBounds()); m.layer.openPopup();
+        }
         sug.innerHTML=''; input.value=nombre;
       };
       sug.appendChild(item);
