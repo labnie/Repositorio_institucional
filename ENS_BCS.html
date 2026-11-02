@@ -55,18 +55,19 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --vino: #6b1a2a;
-  --vino-oscuro: #4a0f1c;
-  --vino-claro: #8c2a3e;
-  --dorado: #c9a84c;
-  --dorado-claro: #f0d98a;
-  --crema: #f7f2ee;
+  /* Identidad unificada con el observatorio: azul petróleo + neutros fríos + acento ámbar */
+  --vino: #15536b;
+  --vino-oscuro: #0c2d3a;
+  --vino-claro: #1c6a86;
+  --dorado: #e0a528;
+  --dorado-claro: #f3d79a;
+  --crema: #f4f6f8;
   --blanco: #ffffff;
-  --texto: #1c1c1c;
-  --texto-suave: #5a5a5a;
-  --texto-tenue: #9a9a9a;
-  --borde: #e0d8d0;
-  --sidebar: #faf7f4;
+  --texto: #1a2730;
+  --texto-suave: #5b6b75;
+  --texto-tenue: #8f9ea8;
+  --borde: #dce3e8;
+  --sidebar: #f5f8fa;
 }
 
 body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(--texto); min-height: 100vh; }
@@ -150,7 +151,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
 }
 
 .navbar-menu a.observatorio:hover {
-  background: rgba(201,168,76,0.15);
+  background: rgba(224,165,40,0.15);
   color: var(--dorado-claro);
 }
 
@@ -170,7 +171,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(
   top: -80px; right: -80px;
   width: 280px; height: 280px;
   border-radius: 50%;
-  background: rgba(201,168,76,0.08);
+  background: rgba(224,165,40,0.08);
 }
 
 .hero-inner {
@@ -507,7 +508,7 @@ mark {
   font-weight: 600;
   font-family: 'DM Sans', sans-serif;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(107,26,42,0.4);
+  box-shadow: 0 4px 20px rgba(12,45,58,0.4);
   z-index: 200;
   display: none;
   align-items: center;
@@ -799,9 +800,9 @@ mark {
 <div id="modalSolicitud" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
   <div style="background:white; border-radius:16px; max-width:520px; width:90%; padding:2rem; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem; border-bottom:1px solid var(--borde); padding-bottom:1rem;">
-      <div style="width:36px; height:36px; background:#e6f4ea; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">📩</div>
+      <div style="width:36px; height:36px; background:#e9f2f6; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">📩</div>
       <div>
-        <div style="font-size:14px; font-weight:600; color:#1a6b3a;">Solicitar documento</div>
+        <div style="font-size:14px; font-weight:600; color:var(--vino);">Solicitar documento</div>
         <div style="font-size:11px; color:var(--texto-suave);">Completa el formulario para enviar tu solicitud</div>
       </div>
       <button onclick="cerrarSolicitud()" style="margin-left:auto; background:none; border:none; font-size:18px; cursor:pointer; color:var(--texto-suave);">✕</button>
