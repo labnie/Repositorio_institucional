@@ -600,6 +600,83 @@ body {
 /* Parpadeo de ruta seleccionada */
 @keyframes rutaBlink { 0%,100% { opacity:1; } 50% { opacity:0.12; } }
 .ruta-parpadeo { animation: rutaBlink 0.65s ease-in-out 7; }
+
+/* ====== RECORRIDO GUIADO (Guía de uso) ====== */
+#btnGuia {
+  position: fixed; right: 20px; bottom: 20px; z-index: 5000;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #457794; color: #fff; border: none;
+  padding: 11px 16px; border-radius: 999px; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600;
+  box-shadow: 0 6px 20px rgba(28,54,70,0.28); transition: background .18s, transform .18s;
+}
+#btnGuia:hover { background: #39647d; transform: translateY(-1px); }
+#btnGuia svg { width: 17px; height: 17px; flex: none; }
+#tourBackdrop {
+  position: fixed; inset: 0; z-index: 6000; display: none;
+  pointer-events: auto;
+}
+#tourSpot {
+  position: fixed; z-index: 6001; border-radius: 10px; pointer-events: none; display: none;
+  box-shadow: 0 0 0 9999px rgba(20,36,46,0.60), 0 0 0 3px #457794, 0 0 0 6px rgba(255,211,41,0.55);
+  transition: all .28s cubic-bezier(.4,0,.2,1);
+}
+#tourPop {
+  position: fixed; z-index: 6002; display: none; width: min(340px, calc(100vw - 32px));
+  background: #fff; border-radius: 14px; border-top: 4px solid #457794;
+  box-shadow: 0 16px 48px rgba(20,36,46,0.35);
+  font-family: 'DM Sans', sans-serif; color: #23323a;
+  transition: top .28s cubic-bezier(.4,0,.2,1), left .28s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+}
+#tourPop .tp-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 15px 16px 0 18px;
+}
+#tourPop .tp-eyebrow {
+  font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: #457794; margin-bottom: 3px;
+}
+#tourPop .tp-title { font-size: 15.5px; font-weight: 700; line-height: 1.25; color: #1c2a31; }
+#tourPop .tp-close {
+  background: none; border: none; cursor: pointer; color: #9aa7ad;
+  font-size: 20px; line-height: 1; padding: 0 2px; margin: -2px -2px 0 8px; flex: none;
+}
+#tourPop .tp-close:hover { color: #55656c; }
+#tourPop .tp-body { padding: 8px 18px 4px; font-size: 13px; line-height: 1.5; color: #46555c; }
+#tourPop .tp-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px 14px 18px; gap: 10px;
+}
+#tourPop .tp-prog { display: flex; align-items: center; gap: 9px; }
+#tourPop .tp-paso { font-size: 11px; color: #8a979d; font-weight: 600; white-space: nowrap; }
+#tourPop .tp-dots { display: flex; gap: 5px; }
+#tourPop .tp-dot { width: 6px; height: 6px; border-radius: 50%; background: #d7dee1; transition: background .2s, transform .2s; }
+#tourPop .tp-dot.on { background: #c9a84c; transform: scale(1.25); }
+#tourPop .tp-btns { display: flex; gap: 7px; }
+#tourPop button.tp-b {
+  font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600;
+  border-radius: 8px; padding: 7px 13px; cursor: pointer; border: 1px solid transparent;
+  transition: background .15s, border-color .15s;
+}
+#tourPop .tp-prev { background: #fff; border-color: #cfd8dc; color: #4a595f; }
+#tourPop .tp-prev:hover { background: #f1f4f6; }
+#tourPop .tp-prev[disabled] { opacity: .4; cursor: default; }
+#tourPop .tp-next { background: #457794; color: #fff; }
+#tourPop .tp-next:hover { background: #39647d; }
+#tourPop .tp-skip { background: none; border: none; color: #9aa7ad; font-size: 11.5px; cursor: pointer; font-family:'DM Sans',sans-serif; }
+#tourPop .tp-skip:hover { color: #55656c; text-decoration: underline; }
+/* Botón de guía dentro del modal de bienvenida */
+#obsBienvenida .obs-guia-link {
+  display: inline-block; margin-top: 10px; background: none; border: none;
+  color: #457794; font-family:'DM Sans',sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; text-decoration: underline; padding: 0;
+}
+@media (max-width: 640px) {
+  #tourPop { left: 16px !important; right: 16px; width: auto; bottom: 16px; top: auto !important; }
+  #btnGuia { right: 14px; bottom: 14px; padding: 10px 14px; font-size: 13px; }
+  #tourPop .tp-foot { flex-wrap: wrap; }
+}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -618,6 +695,7 @@ body {
       <p>El <b>Observatorio de Información Geográfica para la Práctica Docente</b> es un mapa interactivo diseñado por el Laboratorio Normalista de Investigación Educativa (LABNIE), cuyo objetivo es ofrecer información geográfica y educativa sobre los servicios educativos de Baja California Sur y los contextos escolares en los que las y los estudiantes normalistas realizan sus jornadas de práctica.</p>
       <p>El Observatorio busca proporcionar información que permita analizar las características educativas y territoriales de las escuelas y sus entornos, con el propósito de favorecer una comprensión situada de los contextos de práctica y contribuir al diseño de intervenciones educativas pertinentes a las realidades de cada territorio.</p>
       <button class="obs-btn" onclick="cerrarObsBienvenida()">Explorar el observatorio</button>
+      <button class="obs-guia-link" type="button" onclick="cerrarObsBienvenida(); setTimeout(function(){ if(window.iniciarGuia) window.iniciarGuia(); }, 350);">¿Primera vez? Inicia la guía de uso</button>
       <div class="obs-pie">Laboratorio Normalista de Investigación Educativa · LABNIE</div>
     </div>
   </div>
@@ -1724,6 +1802,169 @@ const ESCUELAS_PRIM = {"type":"FeatureCollection","features":[{"type":"Feature",
       sug.appendChild(item);
     });
   });
+})();
+</script>
+<!-- ====== RECORRIDO GUIADO ====== -->
+<button id="btnGuia" type="button" title="Abrir la guía de uso del observatorio">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+  Guía de uso
+</button>
+<div id="tourBackdrop"></div>
+<div id="tourSpot"></div>
+<div id="tourPop" role="dialog" aria-live="polite">
+  <div class="tp-head">
+    <div>
+      <div class="tp-eyebrow">Recorrido guiado</div>
+      <div class="tp-title" id="tpTitle"></div>
+    </div>
+    <button class="tp-close" id="tpClose" type="button" aria-label="Omitir recorrido">&times;</button>
+  </div>
+  <div class="tp-body" id="tpBody"></div>
+  <div class="tp-foot">
+    <div class="tp-prog">
+      <span class="tp-paso" id="tpPaso"></span>
+      <span class="tp-dots" id="tpDots"></span>
+    </div>
+    <div class="tp-btns">
+      <button class="tp-b tp-prev" id="tpPrev" type="button">Anterior</button>
+      <button class="tp-b tp-next" id="tpNext" type="button">Siguiente</button>
+    </div>
+  </div>
+  <div style="padding:0 18px 12px;text-align:right;"><button class="tp-skip" id="tpSkip" type="button">Omitir recorrido</button></div>
+</div>
+
+<script>
+(function(){
+  // Pasos del recorrido. sel = selector del elemento a resaltar; pre = acción antes de mostrar.
+  const PASOS = [
+    { sel:'.hero-texto h1', titulo:'Bienvenida al Observatorio',
+      texto:'Este observatorio reúne en un mapa interactivo las escuelas de práctica y las condiciones de los contextos donde se ubican. Esta breve guía te muestra cómo aprovecharlo. Puedes avanzar, retroceder u omitirla en cualquier momento.' },
+    { sel:'.mapa-frame', titulo:'El mapa interactivo',
+      texto:'Arrastra para desplazarte y usa la rueda del ratón —o dos dedos en pantallas táctiles— para acercar y alejar. Al hacer clic en cualquier punto se abre una ficha con su información.' },
+    { sel:'.leaflet-control-zoom', titulo:'Acercar y alejar',
+      texto:'Con estos botones puedes aumentar o reducir el nivel de acercamiento del mapa sin usar la rueda del ratón.' },
+    { sel:'.panel-tabs', titulo:'Panel de herramientas',
+      texto:'Desde estas tres pestañas se controla todo el observatorio: <b>Buscar</b> una ubicación, activar <b>Filtros</b> por nivel educativo y contexto, y consultar la <b>Simbología</b> de colores.' },
+    { sel:'#busca', titulo:'Buscador de ubicaciones',
+      pre:function(){ activarTab('buscar'); },
+      texto:'Escribe el nombre de una escuela, colonia, ruta o instalación deportiva (al menos dos letras) y selecciona una sugerencia; el mapa se centrará automáticamente en ella.' },
+    { sel:'#panel-filtros', titulo:'Filtros por nivel y contexto',
+      pre:function(){ activarTab('filtros'); },
+      texto:'Activa o desactiva las capas que te interesen: preescolar, primaria, secundaria, normales, servicios de salud, deporte y recreación, movilidad y colonias. Los filtros de <b>sostenimiento</b> (público/privado) y <b>ámbito</b> (urbano/rural) se aplican de forma transversal a todas las escuelas.' },
+    { sel:'#panel-simbologia', titulo:'Simbología',
+      pre:function(){ activarTab('simbologia'); },
+      texto:'Aquí se explica el significado de cada color y símbolo del mapa, agrupados por nivel educativo y por tipo de servicio.' },
+    { sel:'#explorador', titulo:'Tablero de datos',
+      texto:'Más abajo encontrarás un tablero con indicadores, filtros y el listado detallado de escuelas, con opción de descargar la selección que hayas hecho.' },
+    { sel:'#btnGuia', titulo:'Vuelve a la guía cuando quieras',
+      texto:'Este botón permanece siempre visible. Pulsa <b>«Guía de uso»</b> en cualquier momento para repetir este recorrido. ¡Listo para explorar!' }
+  ];
+
+  const backdrop = document.getElementById('tourBackdrop');
+  const spot = document.getElementById('tourSpot');
+  const pop = document.getElementById('tourPop');
+  const elTitle = document.getElementById('tpTitle');
+  const elBody = document.getElementById('tpBody');
+  const elPaso = document.getElementById('tpPaso');
+  const elDots = document.getElementById('tpDots');
+  const btnPrev = document.getElementById('tpPrev');
+  const btnNext = document.getElementById('tpNext');
+  let i = 0, activo = false;
+
+  function activarTab(nombre){
+    const t = document.querySelector('.panel-tab[data-panel="'+nombre+'"]');
+    if(t && !t.classList.contains('activo')) t.click();
+  }
+
+  function pintarDots(){
+    elDots.innerHTML = '';
+    PASOS.forEach(function(_, k){
+      const d = document.createElement('span');
+      d.className = 'tp-dot' + (k===i ? ' on' : '');
+      elDots.appendChild(d);
+    });
+  }
+
+  function posicionar(){
+    const paso = PASOS[i];
+    const el = document.querySelector(paso.sel);
+    const esMovil = window.matchMedia('(max-width: 640px)').matches;
+    if(!el){ // si no existe el objetivo, centramos el globo sin spotlight
+      spot.style.display = 'none';
+      pop.style.left = (window.innerWidth/2 - pop.offsetWidth/2)+'px';
+      pop.style.top = (window.innerHeight/2 - pop.offsetHeight/2)+'px';
+      return;
+    }
+    const r = el.getBoundingClientRect();
+    const pad = 6;
+    spot.style.display = 'block';
+    spot.style.left = (r.left - pad)+'px';
+    spot.style.top = (r.top - pad)+'px';
+    spot.style.width = (r.width + pad*2)+'px';
+    spot.style.height = (r.height + pad*2)+'px';
+    if(esMovil) return; // en móvil el globo va fijo abajo (CSS)
+    // Posicionar el globo: preferir debajo, luego arriba, luego al lado
+    const pw = pop.offsetWidth, ph = pop.offsetHeight, m = 14;
+    let top, left;
+    if(r.bottom + ph + m < window.innerHeight){ top = r.bottom + m; }
+    else if(r.top - ph - m > 0){ top = r.top - ph - m; }
+    else { top = Math.max(m, window.innerHeight - ph - m); }
+    left = r.left + r.width/2 - pw/2;
+    left = Math.max(m, Math.min(left, window.innerWidth - pw - m));
+    pop.style.left = left+'px';
+    pop.style.top = top+'px';
+  }
+
+  function mostrar(){
+    const paso = PASOS[i];
+    if(paso.pre) try { paso.pre(); } catch(e){}
+    elTitle.innerHTML = paso.titulo;
+    elBody.innerHTML = paso.texto;
+    elPaso.textContent = 'Paso '+(i+1)+' de '+PASOS.length;
+    pintarDots();
+    btnPrev.disabled = (i===0);
+    btnNext.textContent = (i===PASOS.length-1) ? 'Finalizar' : 'Siguiente';
+    const el = document.querySelector(paso.sel);
+    if(el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+    // esperar al scroll/cambio de pestaña antes de medir
+    setTimeout(posicionar, 320);
+  }
+
+  function iniciar(){
+    i = 0; activo = true;
+    backdrop.style.display = 'block';
+    spot.style.display = 'block';
+    pop.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    mostrar();
+  }
+  function terminar(){
+    activo = false;
+    backdrop.style.display = 'none';
+    spot.style.display = 'none';
+    pop.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function siguiente(){ if(i < PASOS.length-1){ i++; mostrar(); } else { terminar(); } }
+  function anterior(){ if(i > 0){ i--; mostrar(); } }
+
+  document.getElementById('btnGuia').addEventListener('click', iniciar);
+  btnNext.addEventListener('click', siguiente);
+  btnPrev.addEventListener('click', anterior);
+  document.getElementById('tpClose').addEventListener('click', terminar);
+  document.getElementById('tpSkip').addEventListener('click', terminar);
+  backdrop.addEventListener('click', terminar);
+  window.addEventListener('resize', function(){ if(activo) posicionar(); });
+  window.addEventListener('scroll', function(){ if(activo) posicionar(); }, true);
+  document.addEventListener('keydown', function(e){
+    if(!activo) return;
+    if(e.key==='Escape') terminar();
+    else if(e.key==='ArrowRight') siguiente();
+    else if(e.key==='ArrowLeft') anterior();
+  });
+
+  // Exponer para el enlace del modal de bienvenida
+  window.iniciarGuia = iniciar;
 })();
 </script>
 </body>
